@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFSI Intelligence Hub · Curated Consulting Intelligence</title>
+    <meta name="description" content="A personal intelligence feed aggregating the latest insights from McKinsey, BCG, Deloitte, PwC and leading financial media across Banking, Payments, AI, and Financial Services.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           RESET & VARIABLES
+        ============================================================ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg-root:      #05090f;
+            --bg-deep:      #080e1a;
+            --bg-mid:       #0c1220;
+            --bg-card:      #0e1528;
+            --bg-card-h:    #121c35;
+            --bg-panel:     #0a1020;
+            --border:       #162035;
+            --border-l:     #1e2e4a;
+            --gold:         #c9a84c;
+            --gold-l:       #e5c96a;
+            --gold-d:       #8a6e2e;
+            --gold-glow:    rgba(201, 168, 76, 0.12);
+            --txt:          #eef2f8;
+            --txt-2:        #7d96b8;
+            --txt-3:        #435770;
+            --green:        #4ade80;
+            --red:          #f87171;
+            --amber:        #fbbf24;
+            --shadow:       0 4px 24px rgba(0,0,0,0.5);
+            --shadow-l:     0 8px 48px rgba(0,0,0,0.7);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-root);
+            color: var(--txt);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 13.5px;
+            line-height: 1.65;
+            min-height: 100vh;
+        }
+
+        /* ============================================================
+           LOADING BAR
+        ============================================================ */
+        #loadingBar {
+            position: fixed; top: 0; left: 0; height: 2px; width: 0;
+            background: linear-gradient(90deg, var(--gold-d), var(--gold), var(--gold-l));
+            z-index: 9999; transition: width 0.3s ease;
+        }
+        #loadingBar.filling { width: 85%; transition: width 8s cubic-bezier(0.1,0.4,0.3,1); }
+        #loadingBar.done    { width: 100%; transition: width 0.2s ease; }
+        #loadingBar.hidden  { opacity: 0; transition: opacity 0.5s ease 0.2s; }
+
+        /* ============================================================
+           TICKER
+        ============================================================ */
+        .ticker-bar {
+            background: var(--bg-deep);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            height: 32px;
+            display: flex;
+            align-items: center;
+        }
+        .ticker-label {
+            background: var(--gold);
+            color: var(--bg-root);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 0 12px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .ticker-track {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+        .ticker-content {
+            display: flex;
+            gap: 0;
+            animation: tickerScroll 60s linear infinite;
+            white-space: nowrap;
+        }
+        .ticker-content:hover { animation-play-state: paused; }
+        .ticker-item {
+            font-size: 11px;
+            color: var(--txt-2);
+            padding: 0 28px;
+            border-right: 1px solid var(--border-l);
+            cursor: default;
+        }
+        .ticker-item strong { color: var(--txt); font-weight: 500; }
+        @keyframes tickerScroll {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        /* ============================================================
+           HEADER
+        ============================================================ */
+        .site-header {
+            background: var(--bg-deep);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 500;
+            box-shadow: 0 2px 30px rgba(0,0,0,0.6);
+        }
+        .header-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        .header-brand {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+        }
+        .brand-logo {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--txt);
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+        .brand-logo em {
+            font-style: normal;
+            color: var(--gold);
+        }
+        .brand-sep {
+            width: 1px;
+            height: 22px;
+            background: var(--border-l);
+        }
+        .brand-tag {
+            font-size: 10px;
+            color: var(--txt-3);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .badge-count {
+            background: var(--gold);
+            color: var(--bg-root);
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 11px;
+            border-radius: 99px;
+            letter-spacing: 0.06em;
+        }
+        .badge-time {
+            font-size: 11px;
+            color: var(--txt-3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: blink 2s ease-in-out infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.2; }
+        }
+
+        /* ============================================================
+           CONTROLS BAR
+        ============================================================ */
+        .controls-bar {
+            background: var(--bg-mid);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 64px;
+            z-index: 400;
+        }
+        .controls-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: 52px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .controls-inner::-webkit-scrollbar { display: none; }
+        .pill-group { display: flex; gap: 5px; flex-shrink: 0; }
+        .pill {
+            background: transparent;
+            border: 1px solid var(--border-l);
+            color: var(--txt-2);
+            border-radius: 99px;
+            padding: 5px 14px;
+            font-size: 11.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .pill:hover { border-color: var(--gold-d); color: var(--txt); }
+        .pill.active {
+            background: var(--gold);
+            color: var(--bg-root);
+            border-color: var(--gold);
+            font-weight: 700;
+        }
+        .controls-divider { width: 1px; height: 22px; background: var(--border-l); flex-shrink: 0; }
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 160px;
+            max-width: 280px;
+        }
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--txt-3);
+            pointer-events: none;
+        }
+        .search-input {
+            width: 100%;
+            background: var(--bg-deep);
+            border: 1px solid var(--border-l);
+            border-radius: 8px;
+            color: var(--txt);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            padding: 7px 10px 7px 32px;
+            outline: none;
+            transition: border-color 0.18s;
+        }
+        .search-input::placeholder { color: var(--txt-3); }
+        .search-input:focus { border-color: var(--gold-d); }
+        .refresh-btn {
+            background: transparent;
+            border: 1px solid var(--gold-d);
+            color: var(--gold);
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.18s;
+            flex-shrink: 0;
+        }
+        .refresh-btn:hover:not(:disabled) { background: var(--gold); color: var(--bg-root); }
+        .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .refresh-btn svg { transition: transform 0.3s; }
+        .refresh-btn.spinning svg { animation: spin 0.9s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ============================================================
+           MAIN LAYOUT
+        ============================================================ */
+        .main-wrap {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px 28px;
+            display: grid;
+            grid-template-columns: 1fr 268px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* ============================================================
+           FALLBACK BANNER
+        ============================================================ */
+        .fallback-banner {
+            display: none;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0.03) 100%);
+            border: 1px solid var(--gold-d);
+            border-left: 3px solid var(--gold);
+            border-radius: 8px;
+            padding: 13px 16px;
+            font-size: 12px;
+            color: var(--txt-2);
+            line-height: 1.6;
+        }
+        .fallback-banner.show { display: block; }
+        .fallback-banner strong { color: var(--gold); }
+
+        /* ============================================================
+           FEATURED STRIP (top 1 wide article)
+        ============================================================ */
+        .featured-strip {
+            margin-bottom: 20px;
+            display: none;
+        }
+        .featured-strip.show { display: block; }
+        .featured-card {
+            background: linear-gradient(135deg, #0e1c3a 0%, var(--bg-card) 100%);
+            border: 1px solid var(--border-l);
+            border-top: 2px solid var(--gold);
+            border-radius: 10px;
+            padding: 24px 28px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.22s ease;
+        }
+        .featured-card:hover { border-color: var(--gold-d); box-shadow: var(--shadow); }
+        .featured-eyebrow {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .featured-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--txt);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.18s;
+        }
+        .featured-title:hover { color: var(--gold-l); }
+        .featured-desc {
+            font-size: 13px;
+            color: var(--txt-2);
+            line-height: 1.7;
+            max-width: 680px;
+        }
+        .featured-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .featured-badge {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 4px;
+        }
+        .featured-date { font-size: 11px; color: var(--txt-3); }
+        .featured-read {
+            background: var(--gold);
+            color: var(--bg-root);
+            padding: 10px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            transition: all 0.18s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .featured-read:hover { background: var(--gold-l); }
+
+        /* ============================================================
+           ARTICLE GRID
+        ============================================================ */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        /* ============================================================
+           ARTICLE CARD
+        ============================================================ */
+        .article-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            transition: all 0.22s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .article-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: border-color 0.22s;
+            pointer-events: none;
+        }
+        .article-card:hover {
+            background: var(--bg-card-h);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+        .article-card:hover::after { border-color: var(--gold-d); }
+        .card-source-tag {
+            display: inline-flex;
+            align-items: center;
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 4px;
+            align-self: flex-start;
+            flex-shrink: 0;
+        }
+        .card-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 14.5px;
+            font-weight: 700;
+            line-height: 1.42;
+            color: var(--txt);
+            text-decoration: none;
+            display: block;
+            transition: color 0.18s;
+        }
+        .card-title:hover { color: var(--gold-l); }
+        .card-desc {
+            font-size: 12px;
+            color: var(--txt-2);
+            line-height: 1.65;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+        .card-topics {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .topic-chip {
+            font-size: 9.5px;
+            color: var(--txt-3);
+            background: var(--bg-deep);
+            border: 1px solid var(--border-l);
+            border-radius: 3px;
+            padding: 2px 7px;
+        }
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
+        .card-date { font-size: 11px; color: var(--txt-3); font-weight: 500; }
+        .card-cta {
+            font-size: 11px;
+            color: var(--gold-d);
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            transition: color 0.18s;
+        }
+        .card-cta:hover { color: var(--gold-l); }
+
+        /* ============================================================
+           SKELETON
+        ============================================================ */
+        .sk-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+        .sk {
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--bg-mid) 25%, var(--bg-panel) 50%, var(--bg-mid) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.6s infinite;
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .sk-tag  { height: 20px; width: 70px; border-radius: 4px; }
+        .sk-t1   { height: 15px; width: 96%; }
+        .sk-t2   { height: 15px; width: 72%; }
+        .sk-d1   { height: 11px; width: 100%; margin-top: 3px; }
+        .sk-d2   { height: 11px; width: 88%; }
+        .sk-d3   { height: 11px; width: 62%; }
+        .sk-foot { height: 11px; width: 45%; margin-top: 8px; }
+
+        /* ============================================================
+           EMPTY STATE
+        ============================================================ */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 64px 40px;
+        }
+        .empty-state h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--txt);
+            margin-bottom: 10px;
+        }
+        .empty-state p { font-size: 13px; color: var(--txt-2); max-width: 380px; margin: 0 auto; }
+
+        /* ============================================================
+           SIDEBAR
+        ============================================================ */
+        .sidebar { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 122px; }
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .panel-head {
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 14px;
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--txt-3);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .panel-head svg { color: var(--gold); }
+        .src-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.14s;
+        }
+        .src-row:last-child { border-bottom: none; }
+        .src-row:hover { background: var(--bg-panel); }
+        .src-status { font-size: 12px; width: 14px; text-align: center; flex-shrink: 0; }
+        .src-status.ok   { color: var(--green); }
+        .src-status.fail { color: var(--red); }
+        .src-status.demo { color: var(--amber); }
+        .src-status.wait { color: var(--txt-3); animation: pulse 1.2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+        .src-name { font-size: 11.5px; color: var(--txt-2); font-weight: 500; flex: 1; }
+        .src-cnt {
+            font-size: 10px;
+            color: var(--txt-3);
+            background: var(--bg-deep);
+            padding: 1px 8px;
+            border-radius: 99px;
+            min-width: 22px;
+            text-align: center;
+        }
+        .topic-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.14s;
+        }
+        .topic-row:last-child { border-bottom: none; }
+        .topic-row:hover { background: var(--bg-panel); }
+        .topic-label { font-size: 11.5px; color: var(--txt-2); font-weight: 500; flex: 1; }
+        .topic-cnt {
+            font-size: 10px;
+            color: var(--txt-3);
+            background: var(--bg-deep);
+            padding: 1px 8px;
+            border-radius: 99px;
+            min-width: 22px;
+            text-align: center;
+        }
+
+        /* ============================================================
+           SOURCE TAG COLOR CLASSES
+        ============================================================ */
+        .t-mckinsey       { background: rgba(0,80,160,.22); color: #5ba4e8; border: 1px solid rgba(0,80,160,.35); }
+        .t-bcg            { background: rgba(26,127,55,.22); color: #5cc47a; border: 1px solid rgba(26,127,55,.35); }
+        .t-deloitte       { background: rgba(134,188,37,.18); color: #a8d85a; border: 1px solid rgba(134,188,37,.3); }
+        .t-pwc            { background: rgba(220,80,20,.2); color: #e8906a; border: 1px solid rgba(220,80,20,.32); }
+        .t-oliverwyman    { background: rgba(0,100,160,.22); color: #5ab8e8; border: 1px solid rgba(0,100,160,.35); }
+        .t-bankingdive    { background: rgba(45,115,200,.22); color: #6aaef0; border: 1px solid rgba(45,115,200,.35); }
+        .t-paymentsdive   { background: rgba(130,50,160,.22); color: #c888e0; border: 1px solid rgba(130,50,160,.35); }
+        .t-pymnts         { background: rgba(240,60,50,.18); color: #f09090; border: 1px solid rgba(240,60,50,.3); }
+        .t-finextra       { background: rgba(0,80,150,.22); color: #5aabdc; border: 1px solid rgba(0,80,150,.35); }
+        .t-financialbrand { background: rgba(201,168,76,.18); color: #e8c96d; border: 1px solid rgba(201,168,76,.3); }
+
+        /* ============================================================
+           FOOTER
+        ============================================================ */
+        .site-footer {
+            border-top: 1px solid var(--border);
+            padding: 28px;
+            margin-top: 32px;
+        }
+        .footer-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .footer-sources { font-size: 11px; color: var(--txt-3); letter-spacing: 0.04em; }
+        .footer-sources span { color: var(--border-l); margin: 0 5px; }
+        .footer-copy { font-size: 11px; color: var(--txt-3); }
+
+        /* ============================================================
+           SCROLL-TO-TOP
+        ============================================================ */
+        #scrollTop {
+            position: fixed; bottom: 24px; right: 24px;
+            width: 40px; height: 40px;
+            background: var(--bg-mid); border: 1px solid var(--border-l); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--gold);
+            opacity: 0; pointer-events: none;
+            transition: all 0.22s ease; z-index: 300;
+        }
+        #scrollTop.show { opacity: 1; pointer-events: auto; }
+        #scrollTop:hover { background: var(--gold); color: var(--bg-root); }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width: 1200px) {
+            .main-wrap { grid-template-columns: 1fr 240px; }
+            .article-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .featured-card { grid-template-columns: 1fr; }
+            .featured-read { align-self: flex-start; }
+        }
+        @media (max-width: 768px) {
+            .main-wrap { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
+            .article-grid { grid-template-columns: 1fr; }
+            .sidebar { position: static; order: -1; }
+            .header-inner { padding: 0 16px; }
+            .brand-sep, .brand-tag { display: none; }
+            .brand-logo { font-size: 18px; }
+            .controls-inner { padding: 0 14px; }
+            .ticker-bar { display: none; }
+            .featured-card { padding: 18px 16px; }
+            .featured-title { font-size: 17px; }
+            .footer-inner { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Loading bar -->
+<div id="loadingBar"></div>
+
+<!-- Ticker -->
+<div class="ticker-bar" id="tickerBar">
+    <div class="ticker-label">Live Feed</div>
+    <div class="ticker-track">
+        <div class="ticker-content" id="tickerContent">
+            <span class="ticker-item"><strong>McKinsey:</strong> Banking on AI transformation in 2025</span>
+            <span class="ticker-item"><strong>BCG:</strong> Payments landscape shifts with ISO 20022</span>
+            <span class="ticker-item"><strong>Deloitte:</strong> Open banking regulation expands globally</span>
+            <span class="ticker-item"><strong>PwC:</strong> Credit risk models evolve with macro uncertainty</span>
+            <span class="ticker-item"><strong>Finextra:</strong> Real-time gross settlement reaches new highs</span>
+            <span class="ticker-item"><strong>Banking Dive:</strong> Deposit competition intensifies for regional banks</span>
+            <span class="ticker-item"><strong>PYMNTS:</strong> CBDC pilots active in 130+ countries</span>
+            <!-- duplicate for seamless loop -->
+            <span class="ticker-item"><strong>McKinsey:</strong> Banking on AI transformation in 2025</span>
+            <span class="ticker-item"><strong>BCG:</strong> Payments landscape shifts with ISO 20022</span>
+            <span class="ticker-item"><strong>Deloitte:</strong> Open banking regulation expands globally</span>
+            <span class="ticker-item"><strong>PwC:</strong> Credit risk models evolve with macro uncertainty</span>
+            <span class="ticker-item"><strong>Finextra:</strong> Real-time gross settlement reaches new highs</span>
+            <span class="ticker-item"><strong>Banking Dive:</strong> Deposit competition intensifies for regional banks</span>
+            <span class="ticker-item"><strong>PYMNTS:</strong> CBDC pilots active in 130+ countries</span>
+        </div>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="site-header">
+    <div class="header-inner">
+        <div class="header-brand">
+            <div class="brand-logo">BFSI <em>Intelligence</em> Hub</div>
+            <div class="brand-sep"></div>
+            <div class="brand-tag">Curated Consulting Intelligence · Refreshed Live</div>
+        </div>
+        <div class="header-right">
+            <span class="badge-count" id="countBadge">Loading…</span>
+            <div class="badge-time">
+                <div class="live-dot"></div>
+                <span id="refreshTime">Connecting</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Controls -->
+<div class="controls-bar">
+    <div class="controls-inner">
+        <div class="pill-group" id="pillGroup">
+            <button class="pill active" data-f="all">All</button>
+            <button class="pill" data-f="banking">🏦 Banking</button>
+            <button class="pill" data-f="payments">💳 Payments</button>
+            <button class="pill" data-f="ai">🤖 AI & Tech</button>
+            <button class="pill" data-f="finserv">🌐 Fin Services</button>
+        </div>
+        <div class="controls-divider"></div>
+        <div class="search-wrap">
+            <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search articles…" autocomplete="off">
+        </div>
+        <button class="refresh-btn" id="refreshBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+                <path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+            </svg>
+            Refresh All
+        </button>
+    </div>
+</div>
+
+<!-- Main -->
+<div class="main-wrap">
+    <!-- Content area -->
+    <main>
+        <div class="fallback-banner" id="fallbackBanner">
+            <strong>⚡ Demo Mode</strong> — Live feeds are blocked by browser CORS policy in this environment.
+            Displaying curated sample articles so the layout and filtering are fully demonstrable.
+            Deploy to a web server or use a CORS browser extension to enable real-time feeds.
+        </div>
+        <div class="featured-strip" id="featuredStrip"></div>
+        <div class="article-grid" id="articleGrid"></div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <!-- Source Health -->
+        <div class="panel">
+            <div class="panel-head">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                </svg>
+                Source Health
+            </div>
+            <div id="sourceList"></div>
+        </div>
+        <!-- Topic Breakdown -->
+        <div class="panel">
+            <div class="panel-head">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                Topic Breakdown
+            </div>
+            <div id="topicBreakdown"></div>
+        </div>
+        <!-- About -->
+        <div class="panel">
+            <div class="panel-head">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+                </svg>
+                About
+            </div>
+            <div style="padding: 14px; font-size: 11.5px; color: var(--txt-2); line-height: 1.7;">
+                A personal intelligence feed replacing manual browsing of consulting firms and trade media.
+                Articles are filtered by BFSI relevance and sorted newest-first.
+                <div style="margin-top:10px; font-size:10.5px; color:var(--txt-3);">
+                    Sources: McKinsey · BCG · Deloitte · PwC · Oliver Wyman · Banking Dive · Payments Dive · PYMNTS · Finextra · The Financial Brand
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-sources">
+            Sources:
+            McKinsey<span>·</span>BCG<span>·</span>Deloitte<span>·</span>PwC<span>·</span>Oliver Wyman<span>·</span>Banking Dive<span>·</span>Payments Dive<span>·</span>PYMNTS<span>·</span>Finextra<span>·</span>The Financial Brand
+        </div>
+        <div class="footer-copy">BFSI Intelligence Hub · Not affiliated with any cited organization</div>
+    </div>
+</footer>
+
+<!-- Scroll Top -->
+<button id="scrollTop" title="Back to top" aria-label="Scroll to top">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M18 15l-6-6-6 6"/>
+    </svg>
+</button>
+
+<script>
+/* ================================================================
+   CONFIG
+================================================================ */
+const CONFIG = {
+    proxy: 'https://api.allorigins.win/get?url=',
+    sources: [
+        { id:'mckinsey',       name:'McKinsey',            url:'https://www.mckinsey.com/rss/insights.xml',             cls:'t-mckinsey' },
+        { id:'bcg',            name:'BCG',                 url:'https://www.bcg.com/rss/insights.xml',                  cls:'t-bcg' },
+        { id:'deloitte',       name:'Deloitte',            url:'https://www2.deloitte.com/us/en/insights.rss',          cls:'t-deloitte' },
+        { id:'pwc',            name:'PwC',                 url:'https://www.pwc.com/gx/en/rss.xml',                     cls:'t-pwc' },
+        { id:'oliverwyman',    name:'Oliver Wyman',        url:'https://www.oliverwyman.com/rss.xml',                   cls:'t-oliverwyman' },
+        { id:'bankingdive',    name:'Banking Dive',        url:'https://www.bankingdive.com/feeds/news.rss',            cls:'t-bankingdive' },
+        { id:'paymentsdive',   name:'Payments Dive',       url:'https://www.paymentsdive.com/feeds/news.rss',           cls:'t-paymentsdive' },
+        { id:'pymnts',         name:'PYMNTS',              url:'https://www.pymnts.com/feed/',                          cls:'t-pymnts' },
+        { id:'finextra',       name:'Finextra',            url:'https://www.finextra.com/rss/headlines.rss',            cls:'t-finextra' },
+        { id:'financialbrand', name:'The Financial Brand', url:'https://thefinancialbrand.com/feed/',                   cls:'t-financialbrand' },
+    ],
+    topics: {
+        banking: {
+            label: '🏦 Commercial Banking',
+            kw: ['commercial banking','corporate banking','trade finance','lending','credit','treasury','loan','deposit','wealth management','retail banking']
+        },
+        payments: {
+            label: '💳 Payments',
+            kw: ['payments','real-time payments','iso 20022','swift','cross-border','digital payments','cbdc','payment','remittance','settlement','clearing','acquiring']
+        },
+        ai: {
+            label: '🤖 AI & Technology',
+            kw: ['artificial intelligence',' ai ','ai-','machine learning','generative ai','automation','fintech','regtech','blockchain','digital transformation','algorithm','model']
+        },
+        finserv: {
+            label: '🌐 Financial Services',
+            kw: ['financial services','bfsi','banking transformation','digital banking','open banking','embedded finance','insurance','capital markets','asset management','wealth']
+        },
+    }
+};
+
+/* ================================================================
+   FALLBACK DATA (used when all CORS fetches fail)
+================================================================ */
+const FALLBACK = [
+    {
+        id:'fb01', sourceId:'mckinsey', sourceName:'McKinsey', cls:'t-mckinsey',
+        title:'The Future of Commercial Banking in a Digital-First World',
+        desc:'Traditional commercial banks face mounting pressure as fintech challengers and big tech firms encroach on core revenue streams. This report outlines strategic imperatives for banks seeking to reclaim competitive ground through digital transformation and ecosystem partnerships.',
+        link:'https://www.mckinsey.com/industries/financial-services/our-insights',
+        pub: new Date(Date.now()-2*86400000).toISOString(),
+    },
+    {
+        id:'fb02', sourceId:'bcg', sourceName:'BCG', cls:'t-bcg',
+        title:'Generative AI in Financial Services: Scaling From Pilot to Production',
+        desc:'After years of proof-of-concept pilots, generative AI is entering the production phase at leading financial institutions. BCG analysis reveals the organizational, data, and risk management conditions that determine whether AI investments deliver measurable returns.',
+        link:'https://www.bcg.com/industries/financial-institutions',
+        pub: new Date(Date.now()-3*86400000).toISOString(),
+    },
+    {
+        id:'fb03', sourceId:'deloitte', sourceName:'Deloitte', cls:'t-deloitte',
+        title:'ISO 20022 Migration: The Real-Time Payments Revolution Accelerates',
+        desc:"The global migration to ISO 20022 messaging standards is entering its most critical phase, with SWIFT's cross-border payment network completing its transition window. Deloitte examines how banks can turn compliance requirements into competitive differentiation.",
+        link:'https://www2.deloitte.com/us/en/insights/industry/financial-services',
+        pub: new Date(Date.now()-4*86400000).toISOString(),
+    },
+    {
+        id:'fb04', sourceId:'pwc', sourceName:'PwC', cls:'t-pwc',
+        title:"Open Banking's Next Chapter: Embedded Finance and API-First Strategy",
+        desc:"Open banking has evolved from a regulatory obligation into a strategic growth lever for forward-thinking financial institutions. PwC's global survey of 500 banking executives reveals how API-first architectures are enabling new revenue models and customer acquisition channels.",
+        link:'https://www.pwc.com/gx/en/financial-services',
+        pub: new Date(Date.now()-5*86400000).toISOString(),
+    },
+    {
+        id:'fb05', sourceId:'oliverwyman', sourceName:'Oliver Wyman', cls:'t-oliverwyman',
+        title:'Credit Risk Transformation: AI-Driven Underwriting in Corporate Banking',
+        desc:"Machine learning models are redefining how corporate banks assess creditworthiness, moving beyond traditional financial ratios to incorporate alternative data signals. Oliver Wyman's analysis reveals a 25% improvement in default prediction accuracy at early-adopting institutions.",
+        link:'https://www.oliverwyman.com/our-expertise/industries/financial-services',
+        pub: new Date(Date.now()-6*86400000).toISOString(),
+    },
+    {
+        id:'fb06', sourceId:'bankingdive', sourceName:'Banking Dive', cls:'t-bankingdive',
+        title:'Community Banks Navigate Deposit Competition and Rate Pressure',
+        desc:'Rising interest rates and aggressive deposit-gathering by digital-first competitors are squeezing net interest margins at regional and community banks. Banking Dive examines the strategies executives are deploying to retain deposits and maintain profitability through the cycle.',
+        link:'https://www.bankingdive.com',
+        pub: new Date(Date.now()-7*86400000).toISOString(),
+    },
+    {
+        id:'fb07', sourceId:'paymentsdive', sourceName:'Payments Dive', cls:'t-paymentsdive',
+        title:'Cross-Border Payments: SWIFT GPI vs. Emerging Blockchain Corridors',
+        desc:"The cross-border payments landscape is fragmenting as blockchain-based settlement networks challenge SWIFT's dominance in correspondent banking. Payments Dive maps the competitive landscape and identifies the corridors most likely to see disruption over the next 18 months.",
+        link:'https://www.paymentsdive.com',
+        pub: new Date(Date.now()-8*86400000).toISOString(),
+    },
+    {
+        id:'fb08', sourceId:'pymnts', sourceName:'PYMNTS', cls:'t-pymnts',
+        title:'CBDC Momentum: 130 Countries Now in Active Exploration or Pilot Phase',
+        desc:"Central bank digital currencies have moved from theoretical exercise to operational reality in a growing number of jurisdictions. PYMNTS' global CBDC tracker identifies the design choices — retail vs. wholesale, account-based vs. token-based — that will shape interoperability.",
+        link:'https://www.pymnts.com/central-bank-digital-currency',
+        pub: new Date(Date.now()-9*86400000).toISOString(),
+    },
+    {
+        id:'fb09', sourceId:'finextra', sourceName:'Finextra', cls:'t-finextra',
+        title:'Machine Learning in Trade Finance: Automating Documentary Credit Processing',
+        desc:'Trade finance remains one of banking\'s most paper-intensive processes, but AI is beginning to change that. Finextra reports on how leading transaction banks are deploying NLP and computer vision to cut letter-of-credit processing times from days to hours.',
+        link:'https://www.finextra.com/channel/trade-finance',
+        pub: new Date(Date.now()-10*86400000).toISOString(),
+    },
+    {
+        id:'fb10', sourceId:'financialbrand', sourceName:'The Financial Brand', cls:'t-financialbrand',
+        title:'Digital Banking Experience: Why CX Is the New Battleground for Deposits',
+        desc:"Customer experience has overtaken rate as the primary driver of primary bank relationships among under-40 consumers. The Financial Brand's annual digital banking survey reveals the UX investments delivering the highest retention and share-of-wallet gains.",
+        link:'https://thefinancialbrand.com/category/digital-banking',
+        pub: new Date(Date.now()-11*86400000).toISOString(),
+    },
+];
+
+/* ================================================================
+   STATE
+================================================================ */
+const state = {
+    articles: [],
+    srcStatus: Object.fromEntries(CONFIG.sources.map(s => [s.id, { status:'wait', cnt:0, name:s.name }])),
+    filter: 'all',
+    query: '',
+    loading: false,
+    fallback: false,
+};
+
+/* ================================================================
+   UTILS
+================================================================ */
+function rDate(iso) {
+    if (!iso) return 'Recently';
+    const d = new Date(iso), now = Date.now(), diff = Math.floor((now - d) / 1000);
+    if (isNaN(d)) return 'Recently';
+    if (diff < 60)     return 'Just now';
+    if (diff < 3600)   return `${Math.floor(diff/60)}m ago`;
+    if (diff < 86400)  return `${Math.floor(diff/3600)}h ago`;
+    if (diff < 604800) return `${Math.floor(diff/86400)}d ago`;
+    return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+}
+
+function clean(html) {
+    if (!html) return '';
+    return html
+        .replace(/<[^>]+>/g, '')
+        .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();
+}
+
+function topicsOf(title, desc) {
+    const txt = (title + ' ' + desc).toLowerCase();
+    return Object.entries(CONFIG.topics)
+        .filter(([,t]) => t.kw.some(k => txt.includes(k)))
+        .map(([k]) => k);
+}
+
+function isDup(a, b) {
+    const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g,'').trim();
+    const na = norm(a), nb = norm(b);
+    if (na === nb) return true;
+    const [short, long] = na.length <= nb.length ? [na,nb] : [nb,na];
+    return short.length > 24 && long.startsWith(short.slice(0, Math.floor(short.length*0.75)));
+}
+
+function dedupe(arr) {
+    const seen = [];
+    return arr.filter(a => {
+        if (seen.some(s => isDup(s.title, a.title))) return false;
+        seen.push(a);
+        return true;
+    });
+}
+
+function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ================================================================
+   RSS PARSING
+================================================================ */
+function parseRSS(xml, src) {
+    const doc = new DOMParser().parseFromString(xml, 'text/xml');
+    const items = doc.querySelectorAll('item, entry');
+    const results = [];
+    items.forEach((item, i) => {
+        const title = clean(item.querySelector('title')?.textContent || '');
+        if (!title || title.length < 8) return;
+        const link  = (item.querySelector('link')?.textContent?.trim() || item.querySelector('link')?.getAttribute('href') || '').trim();
+        const desc  = clean(item.querySelector('description, summary, content\\:encoded')?.textContent || '');
+        const pub   = item.querySelector('pubDate, published, dc\\:date, updated')?.textContent || '';
+        const parsedPub = pub ? new Date(pub) : new Date();
+        const art = {
+            id: `${src.id}_${i}`,
+            title,
+            desc: desc.slice(0, 420),
+            link,
+            pub: isNaN(parsedPub) ? new Date().toISOString() : parsedPub.toISOString(),
+            sourceName: src.name,
+            sourceId: src.id,
+            cls: src.cls,
+            topics: [],
+        };
+        art.topics = topicsOf(art.title, art.desc);
+        results.push(art);
+    });
+    return results;
+}
+
+/* ================================================================
+   FETCH
+================================================================ */
+async function fetchOne(src) {
+    const url = CONFIG.proxy + encodeURIComponent(src.url);
+    const res = await fetch(url, { signal: AbortSignal.timeout(14000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (!json.contents) throw new Error('empty');
+    return parseRSS(json.contents, src);
+}
+
+async function fetchAll() {
+    if (state.loading) return;
+    state.loading = true;
+
+    const btn = document.getElementById('refreshBtn');
+    btn.disabled = true;
+    btn.classList.add('spinning');
+    startBar();
+
+    CONFIG.sources.forEach(s => { state.srcStatus[s.id] = { status:'wait', cnt:0, name:s.name }; });
+    renderSources();
+    renderSkeletons();
+
+    const tasks = CONFIG.sources.map(src =>
+        fetchOne(src)
+            .then(arts => {
+                state.srcStatus[src.id] = { status:'ok', cnt:arts.length, name:src.name };
+                renderSources();
+                return arts;
+            })
+            .catch(err => {
+                console.warn(`[BFSI] ${src.name} failed:`, err.message);
+                state.srcStatus[src.id] = { status:'fail', cnt:0, name:src.name };
+                renderSources();
+                return [];
+            })
+    );
+
+    const settled = await Promise.allSettled(tasks);
+    const fresh = settled.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+
+    state.loading = false;
+    btn.disabled = false;
+    btn.classList.remove('spinning');
+    doneBar();
+
+    const okCount = Object.values(state.srcStatus).filter(s => s.status === 'ok').length;
+
+    if (okCount === 0) {
+        state.fallback = true;
+        const fb = FALLBACK.map(a => ({
+            ...a,
+            desc: a.desc,
+            topics: topicsOf(a.title, a.desc),
+        }));
+        state.articles = fb;
+        CONFIG.sources.forEach(s => {
+            const match = fb.filter(a => a.sourceId === s.id);
+            state.srcStatus[s.id] = { status:'demo', cnt:match.length, name:s.name };
+        });
+        document.getElementById('fallbackBanner').classList.add('show');
+        renderSources();
+    } else {
+        const existing = state.articles.filter(a => a.id.startsWith('fb'));
+        const merged   = dedupe([...fresh, ...existing]);
+        state.articles = merged.sort((a,b) => new Date(b.pub) - new Date(a.pub));
+    }
+
+    document.getElementById('refreshTime').textContent = `Refreshed ${rDate(new Date().toISOString())}`;
+    renderAll();
+}
+
+/* ================================================================
+   LOADING BAR
+================================================================ */
+const bar = document.getElementById('loadingBar');
+function startBar() { bar.className = ''; bar.style.width='0'; requestAnimationFrame(()=>{ bar.classList.add('filling'); }); }
+function doneBar()  { bar.classList.remove('filling'); bar.classList.add('done'); setTimeout(()=>bar.classList.add('hidden'),300); }
+
+/* ================================================================
+   RENDERING
+================================================================ */
+function renderSkeletons() {
+    document.getElementById('featuredStrip').classList.remove('show');
+    document.getElementById('featuredStrip').innerHTML = '';
+    document.getElementById('articleGrid').innerHTML = Array.from({length:9}).map(()=>`
+        <div class="sk-card">
+            <div class="sk sk-tag"></div>
+            <div class="sk sk-t1"></div>
+            <div class="sk sk-t2"></div>
+            <div class="sk sk-d1"></div>
+            <div class="sk sk-d2"></div>
+            <div class="sk sk-d3"></div>
+            <div class="sk sk-foot"></div>
+        </div>`).join('');
+    document.getElementById('countBadge').textContent = 'Loading…';
+}
+
+function visible(a) {
+    if (state.filter !== 'all' && !a.topics.includes(state.filter)) return false;
+    if (state.query) {
+        const q = state.query.toLowerCase();
+        if (!a.title.toLowerCase().includes(q) && !a.desc.toLowerCase().includes(q) && !a.sourceName.toLowerCase().includes(q)) return false;
+    }
+    return true;
+}
+
+function cardHTML(a) {
+    const topicChips = a.topics.map(t =>
+        `<span class="topic-chip">${CONFIG.topics[t]?.label || t}</span>`
+    ).join('');
+    return `
+    <div class="article-card">
+        <span class="card-source-tag ${esc(a.cls)}">${esc(a.sourceName)}</span>
+        <a class="card-title" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">${esc(a.title)}</a>
+        <p class="card-desc">${esc(a.desc) || 'No description available.'}</p>
+        ${topicChips ? `<div class="card-topics">${topicChips}</div>` : ''}
+        <div class="card-footer">
+            <span class="card-date">${rDate(a.pub)}</span>
+            <a class="card-cta" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">Read →</a>
+        </div>
+    </div>`;
+}
+
+function renderAll() {
+    const list = state.articles.filter(visible);
+    document.getElementById('countBadge').textContent = `${list.length} Article${list.length !== 1 ? 's' : ''}`;
+
+    const grid = document.getElementById('articleGrid');
+    const strip = document.getElementById('featuredStrip');
+
+    if (list.length === 0) {
+        strip.classList.remove('show');
+        strip.innerHTML = '';
+        grid.innerHTML = `
+            <div class="empty-state">
+                <h3>No articles found</h3>
+                <p>Try a different filter or search term, or click Refresh All to fetch the latest.</p>
+            </div>`;
+        return;
+    }
+
+    // Featured card = newest article
+    const [top, ...rest] = list;
+    const topTopics = top.topics.map(t => `<span class="card-source-tag ${esc(top.cls)}" style="margin-right:6px">${CONFIG.topics[t]?.label||t}</span>`).join('');
+    strip.innerHTML = `
+        <div class="featured-card">
+            <div>
+                <div class="featured-eyebrow">Featured · ${esc(top.sourceName)}</div>
+                <a class="featured-title" href="${esc(top.link)}" target="_blank" rel="noopener noreferrer">${esc(top.title)}</a>
+                <p class="featured-desc">${esc(top.desc)}</p>
+                <div class="featured-meta">
+                    <span class="featured-badge ${esc(top.cls)}">${esc(top.sourceName)}</span>
+                    ${topTopics}
+                    <span class="featured-date">${rDate(top.pub)}</span>
+                </div>
+            </div>
+            <a class="featured-read" href="${esc(top.link)}" target="_blank" rel="noopener noreferrer">Read Article →</a>
+        </div>`;
+    strip.classList.add('show');
+
+    grid.innerHTML = rest.map(cardHTML).join('');
+    renderTopics();
+}
+
+function renderSources() {
+    document.getElementById('sourceList').innerHTML = Object.entries(state.srcStatus).map(([,s]) => {
+        const iconMap = { ok:'<span class="src-status ok">✓</span>', fail:'<span class="src-status fail">✗</span>', demo:'<span class="src-status demo">◇</span>', wait:'<span class="src-status wait">◌</span>' };
+        return `<div class="src-row">
+            ${iconMap[s.status] || iconMap.wait}
+            <span class="src-name">${esc(s.name)}</span>
+            <span class="src-cnt">${s.cnt}</span>
+        </div>`;
+    }).join('');
+}
+
+function renderTopics() {
+    document.getElementById('topicBreakdown').innerHTML = Object.entries(CONFIG.topics).map(([key, t]) => {
+        const cnt = state.articles.filter(a => a.topics.includes(key)).length;
+        return `<div class="topic-row" onclick="setFilter('${key}')">
+            <span class="topic-label">${t.label}</span>
+            <span class="topic-cnt">${cnt}</span>
+        </div>`;
+    }).join('');
+}
+
+/* ================================================================
+   FILTER + SEARCH
+================================================================ */
+function setFilter(f) {
+    state.filter = f;
+    document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.f === f));
+    renderAll();
+}
+
+document.getElementById('pillGroup').addEventListener('click', e => {
+    const p = e.target.closest('.pill');
+    if (p) setFilter(p.dataset.f);
+});
+
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', e => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { state.query = e.target.value.trim(); renderAll(); }, 150);
+});
+
+document.getElementById('refreshBtn').addEventListener('click', () => {
+    if (!state.loading) {
+        state.articles = [];
+        state.fallback = false;
+        document.getElementById('fallbackBanner').classList.remove('show');
+        document.getElementById('featuredStrip').classList.remove('show');
+        fetchAll();
+    }
+});
+
+/* ================================================================
+   SCROLL TOP
+================================================================ */
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => scrollTopBtn.classList.toggle('show', window.scrollY > 500));
+scrollTopBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+/* ================================================================
+   INIT
+================================================================ */
+renderSources();
+renderSkeletons();
+fetchAll();
+</script>
+</body>
+</html>
