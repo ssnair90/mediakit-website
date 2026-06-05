@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BFSI Intelligence Hub · Curated Consulting Intelligence</title>
-    <meta name="description" content="Curated consulting intelligence across Banking, Payments, AI & Financial Services.">
+    <meta name="description" content="A personal intelligence feed aggregating the latest insights from McKinsey, BCG, Deloitte, PwC and leading financial media across Banking, Payments, AI, and Financial Services.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
            RESET & VARIABLES
@@ -15,94 +15,97 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg:         #f0f2f5;
-            --white:      #ffffff;
-            --navy:       #0b1929;
-            --navy-2:     #1a3050;
-            --amber:      #e89840;
-            --amber-d:    #c97820;
-            --amber-l:    #fef4e4;
-            --blue:       #0057b8;
-            --blue-2:     #0070e8;
-            --blue-bg:    #e8f0fb;
-            --text:       #111827;
-            --text-2:     #4b5563;
-            --text-3:     #9ca3af;
-            --border:     #e0e5ec;
-            --border-l:   #f1f3f6;
-            --green:      #16a34a;
-            --red:        #dc2626;
-            --amber-status: #d97706;
-            --shadow:     0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
-            --shadow-md:  0 4px 16px rgba(0,0,0,.1);
+            --bg-root:      #05090f;
+            --bg-deep:      #080e1a;
+            --bg-mid:       #0c1220;
+            --bg-card:      #0e1528;
+            --bg-card-h:    #121c35;
+            --bg-panel:     #0a1020;
+            --border:       #162035;
+            --border-l:     #1e2e4a;
+            --gold:         #c9a84c;
+            --gold-l:       #e5c96a;
+            --gold-d:       #8a6e2e;
+            --gold-glow:    rgba(201, 168, 76, 0.12);
+            --txt:          #eef2f8;
+            --txt-2:        #7d96b8;
+            --txt-3:        #435770;
+            --green:        #4ade80;
+            --red:          #f87171;
+            --amber:        #fbbf24;
+            --shadow:       0 4px 24px rgba(0,0,0,0.5);
+            --shadow-l:     0 8px 48px rgba(0,0,0,0.7);
         }
 
         html { scroll-behavior: smooth; }
 
         body {
-            background: var(--bg);
-            color: var(--text);
+            background: var(--bg-root);
+            color: var(--txt);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             font-size: 13.5px;
-            line-height: 1.6;
+            line-height: 1.65;
+            min-height: 100vh;
         }
-
-        a { color: inherit; text-decoration: none; }
 
         /* ============================================================
            LOADING BAR
         ============================================================ */
         #loadingBar {
-            position: fixed; top: 0; left: 0; height: 3px; width: 0;
-            background: linear-gradient(90deg, var(--amber-d), var(--amber), #f5c06a);
-            z-index: 9999; transition: width .3s;
+            position: fixed; top: 0; left: 0; height: 2px; width: 0;
+            background: linear-gradient(90deg, var(--gold-d), var(--gold), var(--gold-l));
+            z-index: 9999; transition: width 0.3s ease;
         }
-        #loadingBar.fill   { width: 82%; transition: width 8s cubic-bezier(.1,.4,.3,1); }
-        #loadingBar.done   { width: 100%; transition: width .2s; }
-        #loadingBar.hidden { opacity: 0; transition: opacity .5s .2s; }
+        #loadingBar.filling { width: 85%; transition: width 8s cubic-bezier(0.1,0.4,0.3,1); }
+        #loadingBar.done    { width: 100%; transition: width 0.2s ease; }
+        #loadingBar.hidden  { opacity: 0; transition: opacity 0.5s ease 0.2s; }
 
         /* ============================================================
-           TOP TICKER
+           TICKER
         ============================================================ */
-        .ticker {
-            background: var(--navy);
-            height: 30px;
+        .ticker-bar {
+            background: var(--bg-deep);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            height: 32px;
             display: flex;
             align-items: center;
-            overflow: hidden;
         }
         .ticker-label {
-            background: var(--amber);
-            color: var(--navy);
+            background: var(--gold);
+            color: var(--bg-root);
             font-size: 9px;
             font-weight: 800;
-            letter-spacing: .14em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             padding: 0 12px;
             height: 100%;
             display: flex;
             align-items: center;
-            flex-shrink: 0;
             white-space: nowrap;
+            flex-shrink: 0;
         }
-        .ticker-scroll {
+        .ticker-track {
             flex: 1;
             overflow: hidden;
+            position: relative;
         }
-        .ticker-inner {
+        .ticker-content {
             display: flex;
+            gap: 0;
+            animation: tickerScroll 60s linear infinite;
             white-space: nowrap;
-            animation: scroll 55s linear infinite;
         }
-        .ticker-inner:hover { animation-play-state: paused; }
+        .ticker-content:hover { animation-play-state: paused; }
         .ticker-item {
             font-size: 11px;
-            color: #a0aec0;
-            padding: 0 24px;
-            border-right: 1px solid #1e2d3d;
+            color: var(--txt-2);
+            padding: 0 28px;
+            border-right: 1px solid var(--border-l);
+            cursor: default;
         }
-        .ticker-item b { color: #e2e8f0; font-weight: 500; }
-        @keyframes scroll {
+        .ticker-item strong { color: var(--txt); font-weight: 500; }
+        @keyframes tickerScroll {
             from { transform: translateX(0); }
             to   { transform: translateX(-50%); }
         }
@@ -111,693 +114,580 @@
            HEADER
         ============================================================ */
         .site-header {
-            background: var(--white);
-            border-bottom: 2px solid var(--border);
+            background: var(--bg-deep);
+            border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 500;
-            box-shadow: var(--shadow);
+            box-shadow: 0 2px 30px rgba(0,0,0,0.6);
         }
         .header-inner {
-            max-width: 1360px;
+            max-width: 1440px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 28px;
             display: flex;
             align-items: center;
-            gap: 0;
-            height: 58px;
+            justify-content: space-between;
+            height: 64px;
         }
-        .brand {
-            font-family: 'Inter', sans-serif;
-            font-size: 17px;
-            font-weight: 800;
-            color: var(--navy);
-            letter-spacing: -.03em;
-            white-space: nowrap;
-            flex-shrink: 0;
+        .header-brand {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            align-items: baseline;
+            gap: 14px;
         }
-        .brand-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: var(--amber);
+        .brand-logo {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--txt);
+            letter-spacing: -0.03em;
+            line-height: 1;
         }
-        .header-nav {
-            display: flex;
-            align-items: center;
-            gap: 1px;
-            margin-left: 28px;
-            flex: 1;
+        .brand-logo em {
+            font-style: normal;
+            color: var(--gold);
         }
-        .nav-tab {
-            font-size: 12.5px;
+        .brand-sep {
+            width: 1px;
+            height: 22px;
+            background: var(--border-l);
+        }
+        .brand-tag {
+            font-size: 10px;
+            color: var(--txt-3);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
             font-weight: 600;
-            color: var(--text-2);
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-family: 'Inter', sans-serif;
-            transition: all .17s;
-            white-space: nowrap;
         }
-        .nav-tab:hover { color: var(--text); background: var(--bg); }
-        .nav-tab.active { color: var(--navy); background: var(--amber-l); font-weight: 700; }
-        .nav-tab.active::after { content: ''; display: block; height: 2px; background: var(--amber); border-radius: 1px; margin-top: 3px; }
         .header-right {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-left: auto;
+            gap: 14px;
         }
+        .badge-count {
+            background: var(--gold);
+            color: var(--bg-root);
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 11px;
+            border-radius: 99px;
+            letter-spacing: 0.06em;
+        }
+        .badge-time {
+            font-size: 11px;
+            color: var(--txt-3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: blink 2s ease-in-out infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.2; }
+        }
+
+        /* ============================================================
+           CONTROLS BAR
+        ============================================================ */
+        .controls-bar {
+            background: var(--bg-mid);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 64px;
+            z-index: 400;
+        }
+        .controls-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: 52px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .controls-inner::-webkit-scrollbar { display: none; }
+        .pill-group { display: flex; gap: 5px; flex-shrink: 0; }
+        .pill {
+            background: transparent;
+            border: 1px solid var(--border-l);
+            color: var(--txt-2);
+            border-radius: 99px;
+            padding: 5px 14px;
+            font-size: 11.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .pill:hover { border-color: var(--gold-d); color: var(--txt); }
+        .pill.active {
+            background: var(--gold);
+            color: var(--bg-root);
+            border-color: var(--gold);
+            font-weight: 700;
+        }
+        .controls-divider { width: 1px; height: 22px; background: var(--border-l); flex-shrink: 0; }
         .search-wrap {
             position: relative;
+            flex: 1;
+            min-width: 160px;
+            max-width: 280px;
         }
-        .search-wrap svg {
+        .search-icon {
             position: absolute;
-            left: 9px;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-3);
+            color: var(--txt-3);
             pointer-events: none;
         }
         .search-input {
-            width: 200px;
-            background: var(--bg);
-            border: 1.5px solid var(--border);
+            width: 100%;
+            background: var(--bg-deep);
+            border: 1px solid var(--border-l);
             border-radius: 8px;
+            color: var(--txt);
             font-family: 'Inter', sans-serif;
             font-size: 12px;
-            color: var(--text);
-            padding: 6px 10px 6px 30px;
+            padding: 7px 10px 7px 32px;
             outline: none;
-            transition: border-color .17s, width .25s;
+            transition: border-color 0.18s;
         }
-        .search-input::placeholder { color: var(--text-3); }
-        .search-input:focus { border-color: var(--blue); width: 240px; }
-        .count-badge {
-            background: var(--navy);
-            color: #fff;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 99px;
-            white-space: nowrap;
-            letter-spacing: .04em;
-        }
+        .search-input::placeholder { color: var(--txt-3); }
+        .search-input:focus { border-color: var(--gold-d); }
         .refresh-btn {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--amber);
-            color: var(--navy);
-            border: none;
+            background: transparent;
+            border: 1px solid var(--gold-d);
+            color: var(--gold);
             border-radius: 8px;
-            padding: 7px 14px;
-            font-size: 12px;
-            font-weight: 700;
+            padding: 6px 14px;
+            font-size: 11.5px;
+            font-weight: 600;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
-            transition: background .17s;
-            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.18s;
+            flex-shrink: 0;
         }
-        .refresh-btn:hover:not(:disabled) { background: var(--amber-d); color: #fff; }
-        .refresh-btn:disabled { opacity: .55; cursor: default; }
-        .refresh-btn.spinning svg { animation: spin .9s linear infinite; }
+        .refresh-btn:hover:not(:disabled) { background: var(--gold); color: var(--bg-root); }
+        .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .refresh-btn svg { transition: transform 0.3s; }
+        .refresh-btn.spinning svg { animation: spin 0.9s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ============================================================
-           HERO BANNER
-        ============================================================ */
-        .hero {
-            background: var(--amber);
-            background-image: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,.1) 0%, transparent 60%),
-                              radial-gradient(ellipse at 80% 20%, rgba(0,0,0,.06) 0%, transparent 50%);
-            padding: 28px 24px;
-        }
-        .hero-inner {
-            max-width: 1360px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 220px 1fr 200px;
-            gap: 24px;
-            align-items: center;
-        }
-        .hero-brand-block {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .hero-eyebrow {
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: .2em;
-            text-transform: uppercase;
-            color: rgba(11,25,41,.65);
-        }
-        .hero-logo-text {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 21px;
-            font-weight: 900;
-            color: var(--navy);
-            line-height: 1.2;
-        }
-        .hero-tagline {
-            font-size: 11.5px;
-            color: rgba(11,25,41,.7);
-            margin-top: 4px;
-            line-height: 1.5;
-        }
-        .hero-cta-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--navy);
-            color: #fff;
-            font-size: 11.5px;
-            font-weight: 700;
-            padding: 9px 18px;
-            border-radius: 8px;
-            margin-top: 12px;
-            transition: background .17s;
-            letter-spacing: .03em;
-        }
-        .hero-cta-btn:hover { background: var(--navy-2); }
-        .hero-center {
-            text-align: center;
-        }
-        .hero-headline {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 28px;
-            font-weight: 900;
-            color: var(--navy);
-            line-height: 1.2;
-            margin-bottom: 8px;
-        }
-        .hero-subtext {
-            font-size: 13px;
-            color: rgba(11,25,41,.72);
-            line-height: 1.6;
-            max-width: 520px;
-            margin: 0 auto 14px;
-        }
-        .hero-subline {
-            font-size: 11px;
-            color: rgba(11,25,41,.55);
-            letter-spacing: .04em;
-        }
-        .hero-right-block {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 6px;
-        }
-        .hero-stat-num {
-            font-family: 'Playfair Display', serif;
-            font-size: 44px;
-            font-weight: 900;
-            color: var(--navy);
-            line-height: 1;
-        }
-        .hero-stat-label {
-            font-size: 12px;
-            color: rgba(11,25,41,.7);
-            max-width: 160px;
-            text-align: right;
-            line-height: 1.5;
-        }
-        .hero-cta-btn-outline {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            border: 2px solid var(--navy);
-            color: var(--navy);
-            font-size: 11.5px;
-            font-weight: 700;
-            padding: 8px 16px;
-            border-radius: 8px;
-            margin-top: 6px;
-            transition: all .17s;
-        }
-        .hero-cta-btn-outline:hover { background: var(--navy); color: #fff; }
 
         /* ============================================================
            MAIN LAYOUT
         ============================================================ */
         .main-wrap {
-            max-width: 1360px;
-            margin: 22px auto;
-            padding: 0 24px;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px 28px;
             display: grid;
-            grid-template-columns: 1fr 320px 220px;
-            gap: 20px;
+            grid-template-columns: 1fr 268px;
+            gap: 24px;
             align-items: start;
         }
-
-        /* ============================================================
-           SECTION HEADERS
-        ============================================================ */
-        .section-head {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-        .section-title {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--text);
-            letter-spacing: -.02em;
-        }
-        .section-cnt {
-            background: var(--bg);
-            border: 1.5px solid var(--border);
-            color: var(--text-2);
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 9px;
-            border-radius: 99px;
-        }
-        .section-link {
-            margin-left: auto;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--blue);
-            transition: color .15s;
-        }
-        .section-link:hover { color: var(--blue-2); }
 
         /* ============================================================
            FALLBACK BANNER
         ============================================================ */
         .fallback-banner {
             display: none;
-            background: #fffbeb;
-            border: 1.5px solid #fde68a;
-            border-left: 3px solid #f59e0b;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0.03) 100%);
+            border: 1px solid var(--gold-d);
+            border-left: 3px solid var(--gold);
             border-radius: 8px;
-            padding: 11px 14px;
+            padding: 13px 16px;
             font-size: 12px;
-            color: #92400e;
+            color: var(--txt-2);
             line-height: 1.6;
-            margin-bottom: 16px;
         }
         .fallback-banner.show { display: block; }
-        .fallback-banner strong { color: #78350f; }
+        .fallback-banner strong { color: var(--gold); }
 
         /* ============================================================
-           NEWS FEED (left column)
+           FEATURED STRIP (top 1 wide article)
         ============================================================ */
-        .news-item {
-            display: flex;
-            gap: 12px;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border-l);
-            transition: background .14s;
+        .featured-strip {
+            margin-bottom: 20px;
+            display: none;
         }
-        .news-item:last-child { border-bottom: none; }
-        .news-item:hover { background: var(--border-l); margin: 0 -10px; padding-left: 10px; padding-right: 10px; border-radius: 8px; }
-        .news-thumb {
-            width: 88px;
-            height: 66px;
-            border-radius: 7px;
-            flex-shrink: 0;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: flex-end;
-            justify-content: flex-start;
-            overflow: hidden;
-            position: relative;
+        .featured-strip.show { display: block; }
+        .featured-card {
+            background: linear-gradient(135deg, #0e1c3a 0%, var(--bg-card) 100%);
+            border: 1px solid var(--border-l);
+            border-top: 2px solid var(--gold);
+            border-radius: 10px;
+            padding: 24px 28px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.22s ease;
         }
-        .thumb-label {
-            position: absolute;
-            bottom: 4px;
-            left: 4px;
-            background: rgba(0,0,0,.55);
-            color: #fff;
-            font-size: 8.5px;
+        .featured-card:hover { border-color: var(--gold-d); box-shadow: var(--shadow); }
+        .featured-eyebrow {
+            font-size: 9px;
             font-weight: 800;
-            letter-spacing: .08em;
-            padding: 2px 5px;
-            border-radius: 3px;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 8px;
         }
-        .news-body { flex: 1; min-width: 0; }
-        .cat-tag {
-            display: inline-block;
-            font-size: 10.5px;
+        .featured-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 21px;
             font-weight: 700;
-            color: var(--blue);
-            letter-spacing: .01em;
-            margin-bottom: 4px;
+            line-height: 1.3;
+            color: var(--txt);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.18s;
         }
-        .news-title {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--text);
-            line-height: 1.42;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            margin-bottom: 6px;
+        .featured-title:hover { color: var(--gold-l); }
+        .featured-desc {
+            font-size: 13px;
+            color: var(--txt-2);
+            line-height: 1.7;
+            max-width: 680px;
         }
-        .news-title a:hover { color: var(--blue); }
-        .news-meta {
+        .featured-meta {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 11px;
-            color: var(--text-3);
+            gap: 12px;
+            margin-top: 14px;
         }
-        .meta-source {
-            background: var(--bg);
-            border: 1px solid var(--border);
+        .featured-badge {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 3px 10px;
             border-radius: 4px;
-            padding: 1px 7px;
-            font-size: 10.5px;
-            font-weight: 600;
-            color: var(--text-2);
         }
-        .clock-icon { display: flex; align-items: center; }
+        .featured-date { font-size: 11px; color: var(--txt-3); }
+        .featured-read {
+            background: var(--gold);
+            color: var(--bg-root);
+            padding: 10px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            transition: all 0.18s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .featured-read:hover { background: var(--gold-l); }
 
         /* ============================================================
-           NEWS PANEL (wraps news items in white card)
+           ARTICLE GRID
         ============================================================ */
-        .panel-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px 20px;
-            box-shadow: var(--shadow);
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
         }
+
+        /* ============================================================
+           ARTICLE CARD
+        ============================================================ */
+        .article-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            transition: all 0.22s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .article-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            transition: border-color 0.22s;
+            pointer-events: none;
+        }
+        .article-card:hover {
+            background: var(--bg-card-h);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+        .article-card:hover::after { border-color: var(--gold-d); }
+        .card-source-tag {
+            display: inline-flex;
+            align-items: center;
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 4px;
+            align-self: flex-start;
+            flex-shrink: 0;
+        }
+        .card-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 14.5px;
+            font-weight: 700;
+            line-height: 1.42;
+            color: var(--txt);
+            text-decoration: none;
+            display: block;
+            transition: color 0.18s;
+        }
+        .card-title:hover { color: var(--gold-l); }
+        .card-desc {
+            font-size: 12px;
+            color: var(--txt-2);
+            line-height: 1.65;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+        .card-topics {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .topic-chip {
+            font-size: 9.5px;
+            color: var(--txt-3);
+            background: var(--bg-deep);
+            border: 1px solid var(--border-l);
+            border-radius: 3px;
+            padding: 2px 7px;
+        }
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
+        .card-date { font-size: 11px; color: var(--txt-3); font-weight: 500; }
+        .card-cta {
+            font-size: 11px;
+            color: var(--gold-d);
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            transition: color 0.18s;
+        }
+        .card-cta:hover { color: var(--gold-l); }
 
         /* ============================================================
            SKELETON
         ============================================================ */
-        .sk-list-item {
+        .sk-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 20px;
             display: flex;
-            gap: 12px;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border-l);
+            flex-direction: column;
+            gap: 9px;
         }
         .sk {
-            border-radius: 5px;
-            background: linear-gradient(90deg, #f0f2f5 25%, #e8eaed 50%, #f0f2f5 75%);
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--bg-mid) 25%, var(--bg-panel) 50%, var(--bg-mid) 75%);
             background-size: 200% 100%;
             animation: shimmer 1.6s infinite;
         }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        .sk-thumb { width:88px; height:66px; border-radius:7px; flex-shrink:0; }
-        .sk-body { flex:1; display:flex; flex-direction:column; gap:7px; }
-        .sk-tag  { height:12px; width:60px; }
-        .sk-t1   { height:14px; width:95%; }
-        .sk-t2   { height:14px; width:68%; }
-        .sk-meta { height:11px; width:45%; }
-
-        /* ============================================================
-           ANALYSIS / COMMUNITY COLUMN (center)
-        ============================================================ */
-        .analysis-item {
-            display: flex;
-            gap: 12px;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border-l);
-            cursor: default;
-        }
-        .analysis-item:last-child { border-bottom: none; }
-        .analysis-item:hover .analysis-title { color: var(--blue); }
-        .analyst-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: -.02em;
-        }
-        .analyst-body { flex: 1; min-width: 0; }
-        .analyst-header {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 3px;
-        }
-        .analyst-name {
-            font-size: 12.5px;
-            font-weight: 700;
-            color: var(--blue);
-        }
-        .analyst-check {
-            color: var(--blue);
-            font-size: 11px;
-        }
-        .analyst-role {
-            font-size: 11px;
-            color: var(--text-3);
-            margin-bottom: 6px;
-        }
-        .analysis-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            margin-bottom: 6px;
-            transition: color .15s;
-        }
-        .analysis-meta {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            color: var(--text-3);
-        }
-        /* sk for analysis */
-        .sk-analysis-item {
-            display: flex;
-            gap: 12px;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border-l);
-        }
-        .sk-avatar { width:40px; height:40px; border-radius:50%; flex-shrink:0; }
-        .sk-abody { flex:1; display:flex; flex-direction:column; gap:6px; }
-        .sk-an  { height:11px; width:80px; }
-        .sk-ar  { height:10px; width:55px; }
-        .sk-at1 { height:13px; width:95%; }
-        .sk-at2 { height:13px; width:70%; }
-        .sk-am  { height:10px; width:40px; }
-
-        /* ============================================================
-           RIGHT SIDEBAR
-        ============================================================ */
-        .sidebar { display: flex; flex-direction: column; gap: 16px; }
-
-        /* Stat widget */
-        .stat-widget {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            text-align: center;
-        }
-        .stat-widget-brand {
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: .14em;
-            text-transform: uppercase;
-            color: var(--blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            margin-bottom: 12px;
-        }
-        .stat-widget-brand::before,
-        .stat-widget-brand::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-        .stat-big {
-            font-family: 'Playfair Display', serif;
-            font-size: 52px;
-            font-weight: 900;
-            color: var(--blue);
-            line-height: 1;
-            margin-bottom: 8px;
-        }
-        .stat-desc {
-            font-size: 12px;
-            color: var(--text-2);
-            line-height: 1.6;
-            margin-bottom: 14px;
-        }
-        .stat-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--blue-bg);
-            color: var(--blue);
-            font-size: 11.5px;
-            font-weight: 700;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all .17s;
-        }
-        .stat-cta:hover { background: var(--blue); color: #fff; }
-
-        /* Source health panel */
-        .side-panel {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-        .side-panel-head {
-            background: var(--bg);
-            border-bottom: 1px solid var(--border);
-            padding: 10px 14px;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: .12em;
-            text-transform: uppercase;
-            color: var(--text-2);
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-        .src-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 14px;
-            border-bottom: 1px solid var(--border-l);
-            transition: background .12s;
-        }
-        .src-row:last-child { border-bottom: none; }
-        .src-row:hover { background: var(--bg); }
-        .src-dot {
-            width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
-        }
-        .dot-ok   { background: var(--green); }
-        .dot-fail { background: var(--red); }
-        .dot-demo { background: var(--amber-status); }
-        .dot-wait { background: var(--border); animation: pulse 1.2s ease-in-out infinite; }
-        @keyframes pulse { 0%,100%{opacity:1;}50%{opacity:.3;} }
-        .src-name { font-size: 12px; color: var(--text-2); font-weight: 500; flex: 1; }
-        .src-cnt  {
-            font-size: 10.5px;
-            color: var(--text-3);
-            background: var(--bg);
-            border: 1px solid var(--border);
-            padding: 1px 8px;
-            border-radius: 99px;
-            min-width: 22px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        /* Topic breakdown */
-        .topic-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 14px;
-            border-bottom: 1px solid var(--border-l);
-            cursor: pointer;
-            transition: background .12s;
-        }
-        .topic-row:last-child { border-bottom: none; }
-        .topic-row:hover { background: var(--bg); }
-        .topic-label { font-size: 12px; color: var(--text-2); font-weight: 500; flex: 1; }
-        .topic-bar-wrap { width: 48px; height: 4px; background: var(--border); border-radius: 2px; }
-        .topic-bar { height: 100%; background: var(--amber); border-radius: 2px; transition: width .4s; }
-        .topic-cnt {
-            font-size: 10.5px; color: var(--text-3);
-            font-weight: 600; min-width: 22px; text-align: right;
-        }
+        .sk-tag  { height: 20px; width: 70px; border-radius: 4px; }
+        .sk-t1   { height: 15px; width: 96%; }
+        .sk-t2   { height: 15px; width: 72%; }
+        .sk-d1   { height: 11px; width: 100%; margin-top: 3px; }
+        .sk-d2   { height: 11px; width: 88%; }
+        .sk-d3   { height: 11px; width: 62%; }
+        .sk-foot { height: 11px; width: 45%; margin-top: 8px; }
 
         /* ============================================================
            EMPTY STATE
         ============================================================ */
         .empty-state {
-            padding: 48px 20px;
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 64px 40px;
+        }
+        .empty-state h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--txt);
+            margin-bottom: 10px;
+        }
+        .empty-state p { font-size: 13px; color: var(--txt-2); max-width: 380px; margin: 0 auto; }
+
+        /* ============================================================
+           SIDEBAR
+        ============================================================ */
+        .sidebar { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 122px; }
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .panel-head {
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 14px;
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--txt-3);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .panel-head svg { color: var(--gold); }
+        .src-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.14s;
+        }
+        .src-row:last-child { border-bottom: none; }
+        .src-row:hover { background: var(--bg-panel); }
+        .src-status { font-size: 12px; width: 14px; text-align: center; flex-shrink: 0; }
+        .src-status.ok   { color: var(--green); }
+        .src-status.fail { color: var(--red); }
+        .src-status.demo { color: var(--amber); }
+        .src-status.wait { color: var(--txt-3); animation: pulse 1.2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+        .src-name { font-size: 11.5px; color: var(--txt-2); font-weight: 500; flex: 1; }
+        .src-cnt {
+            font-size: 10px;
+            color: var(--txt-3);
+            background: var(--bg-deep);
+            padding: 1px 8px;
+            border-radius: 99px;
+            min-width: 22px;
             text-align: center;
         }
-        .empty-state h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-        .empty-state p  { font-size: 13px; color: var(--text-2); }
+        .topic-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.14s;
+        }
+        .topic-row:last-child { border-bottom: none; }
+        .topic-row:hover { background: var(--bg-panel); }
+        .topic-label { font-size: 11.5px; color: var(--txt-2); font-weight: 500; flex: 1; }
+        .topic-cnt {
+            font-size: 10px;
+            color: var(--txt-3);
+            background: var(--bg-deep);
+            padding: 1px 8px;
+            border-radius: 99px;
+            min-width: 22px;
+            text-align: center;
+        }
+
+        /* ============================================================
+           SOURCE TAG COLOR CLASSES
+        ============================================================ */
+        .t-mckinsey       { background: rgba(0,80,160,.22); color: #5ba4e8; border: 1px solid rgba(0,80,160,.35); }
+        .t-bcg            { background: rgba(26,127,55,.22); color: #5cc47a; border: 1px solid rgba(26,127,55,.35); }
+        .t-deloitte       { background: rgba(134,188,37,.18); color: #a8d85a; border: 1px solid rgba(134,188,37,.3); }
+        .t-pwc            { background: rgba(220,80,20,.2); color: #e8906a; border: 1px solid rgba(220,80,20,.32); }
+        .t-oliverwyman    { background: rgba(0,100,160,.22); color: #5ab8e8; border: 1px solid rgba(0,100,160,.35); }
+        .t-bankingdive    { background: rgba(45,115,200,.22); color: #6aaef0; border: 1px solid rgba(45,115,200,.35); }
+        .t-paymentsdive   { background: rgba(130,50,160,.22); color: #c888e0; border: 1px solid rgba(130,50,160,.35); }
+        .t-pymnts         { background: rgba(240,60,50,.18); color: #f09090; border: 1px solid rgba(240,60,50,.3); }
+        .t-finextra       { background: rgba(0,80,150,.22); color: #5aabdc; border: 1px solid rgba(0,80,150,.35); }
+        .t-financialbrand { background: rgba(201,168,76,.18); color: #e8c96d; border: 1px solid rgba(201,168,76,.3); }
 
         /* ============================================================
            FOOTER
         ============================================================ */
         .site-footer {
-            background: var(--white);
             border-top: 1px solid var(--border);
-            padding: 22px 24px;
-            margin-top: 24px;
+            padding: 28px;
+            margin-top: 32px;
         }
         .footer-inner {
-            max-width: 1360px;
+            max-width: 1440px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
         }
-        .footer-left { font-size: 11px; color: var(--text-3); }
-        .footer-sources { font-size: 11px; color: var(--text-3); }
-        .footer-sources span { margin: 0 4px; color: var(--border); }
+        .footer-sources { font-size: 11px; color: var(--txt-3); letter-spacing: 0.04em; }
+        .footer-sources span { color: var(--border-l); margin: 0 5px; }
+        .footer-copy { font-size: 11px; color: var(--txt-3); }
 
         /* ============================================================
-           SCROLL TOP
+           SCROLL-TO-TOP
         ============================================================ */
         #scrollTop {
-            position: fixed; bottom: 22px; right: 22px;
-            width: 38px; height: 38px;
-            background: var(--navy); border: none; border-radius: 50%;
+            position: fixed; bottom: 24px; right: 24px;
+            width: 40px; height: 40px;
+            background: var(--bg-mid); border: 1px solid var(--border-l); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: #fff;
+            cursor: pointer; color: var(--gold);
             opacity: 0; pointer-events: none;
-            transition: all .22s; z-index: 300;
-            box-shadow: var(--shadow-md);
+            transition: all 0.22s ease; z-index: 300;
         }
         #scrollTop.show { opacity: 1; pointer-events: auto; }
-        #scrollTop:hover { background: var(--blue); }
+        #scrollTop:hover { background: var(--gold); color: var(--bg-root); }
 
         /* ============================================================
            RESPONSIVE
         ============================================================ */
-        @media (max-width: 1100px) {
-            .main-wrap { grid-template-columns: 1fr 280px; }
-            .main-wrap > .sidebar { display: none; }
+        @media (max-width: 1200px) {
+            .main-wrap { grid-template-columns: 1fr 240px; }
+            .article-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .featured-card { grid-template-columns: 1fr; }
+            .featured-read { align-self: flex-start; }
         }
         @media (max-width: 768px) {
-            .main-wrap { grid-template-columns: 1fr; padding: 0 14px; }
-            .hero-inner { grid-template-columns: 1fr; text-align: center; }
-            .hero-right-block { align-items: center; }
-            .hero-tagline { display: none; }
-            .header-nav { display: none; }
-            .search-input { width: 150px; }
-            .ticker { display: none; }
-            .hero { padding: 20px 16px; }
-            .hero-headline { font-size: 22px; }
+            .main-wrap { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
+            .article-grid { grid-template-columns: 1fr; }
+            .sidebar { position: static; order: -1; }
+            .header-inner { padding: 0 16px; }
+            .brand-sep, .brand-tag { display: none; }
+            .brand-logo { font-size: 18px; }
+            .controls-inner { padding: 0 14px; }
+            .ticker-bar { display: none; }
+            .featured-card { padding: 18px 16px; }
+            .featured-title { font-size: 17px; }
+            .footer-inner { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -807,27 +697,25 @@
 <div id="loadingBar"></div>
 
 <!-- Ticker -->
-<div class="ticker">
+<div class="ticker-bar" id="tickerBar">
     <div class="ticker-label">Live Feed</div>
-    <div class="ticker-scroll">
-        <div class="ticker-inner" id="tickerInner">
-            <span class="ticker-item"><b>McKinsey:</b> Banks accelerating AI transformation in 2025</span>
-            <span class="ticker-item"><b>BCG:</b> ISO 20022 reshapes payments infrastructure</span>
-            <span class="ticker-item"><b>Deloitte:</b> Open banking regulation expands to 58 markets</span>
-            <span class="ticker-item"><b>PwC:</b> Credit risk models evolve with macro uncertainty</span>
-            <span class="ticker-item"><b>Finextra:</b> Real-time gross settlement volumes up 34% YoY</span>
-            <span class="ticker-item"><b>Banking Dive:</b> Deposit competition intensifies at regional banks</span>
-            <span class="ticker-item"><b>PYMNTS:</b> CBDC pilots active in 130+ countries</span>
-            <span class="ticker-item"><b>Oliver Wyman:</b> Corporate lending margins compress amid rate shift</span>
-            <!-- duplicate for loop -->
-            <span class="ticker-item"><b>McKinsey:</b> Banks accelerating AI transformation in 2025</span>
-            <span class="ticker-item"><b>BCG:</b> ISO 20022 reshapes payments infrastructure</span>
-            <span class="ticker-item"><b>Deloitte:</b> Open banking regulation expands to 58 markets</span>
-            <span class="ticker-item"><b>PwC:</b> Credit risk models evolve with macro uncertainty</span>
-            <span class="ticker-item"><b>Finextra:</b> Real-time gross settlement volumes up 34% YoY</span>
-            <span class="ticker-item"><b>Banking Dive:</b> Deposit competition intensifies at regional banks</span>
-            <span class="ticker-item"><b>PYMNTS:</b> CBDC pilots active in 130+ countries</span>
-            <span class="ticker-item"><b>Oliver Wyman:</b> Corporate lending margins compress amid rate shift</span>
+    <div class="ticker-track">
+        <div class="ticker-content" id="tickerContent">
+            <span class="ticker-item"><strong>McKinsey:</strong> Banking on AI transformation in 2025</span>
+            <span class="ticker-item"><strong>BCG:</strong> Payments landscape shifts with ISO 20022</span>
+            <span class="ticker-item"><strong>Deloitte:</strong> Open banking regulation expands globally</span>
+            <span class="ticker-item"><strong>PwC:</strong> Credit risk models evolve with macro uncertainty</span>
+            <span class="ticker-item"><strong>Finextra:</strong> Real-time gross settlement reaches new highs</span>
+            <span class="ticker-item"><strong>Banking Dive:</strong> Deposit competition intensifies for regional banks</span>
+            <span class="ticker-item"><strong>PYMNTS:</strong> CBDC pilots active in 130+ countries</span>
+            <!-- duplicate for seamless loop -->
+            <span class="ticker-item"><strong>McKinsey:</strong> Banking on AI transformation in 2025</span>
+            <span class="ticker-item"><strong>BCG:</strong> Payments landscape shifts with ISO 20022</span>
+            <span class="ticker-item"><strong>Deloitte:</strong> Open banking regulation expands globally</span>
+            <span class="ticker-item"><strong>PwC:</strong> Credit risk models evolve with macro uncertainty</span>
+            <span class="ticker-item"><strong>Finextra:</strong> Real-time gross settlement reaches new highs</span>
+            <span class="ticker-item"><strong>Banking Dive:</strong> Deposit competition intensifies for regional banks</span>
+            <span class="ticker-item"><strong>PYMNTS:</strong> CBDC pilots active in 130+ countries</span>
         </div>
     </div>
 </div>
@@ -835,110 +723,66 @@
 <!-- Header -->
 <header class="site-header">
     <div class="header-inner">
-        <div class="brand">
-            <div class="brand-dot"></div>
-            BFSI Intelligence Hub
+        <div class="header-brand">
+            <div class="brand-logo">BFSI <em>Intelligence</em> Hub</div>
+            <div class="brand-sep"></div>
+            <div class="brand-tag">Curated Consulting Intelligence · Refreshed Live</div>
         </div>
-        <nav class="header-nav" id="headerNav">
-            <button class="nav-tab active" data-f="all">All</button>
-            <button class="nav-tab" data-f="banking">🏦 Banking</button>
-            <button class="nav-tab" data-f="payments">💳 Payments</button>
-            <button class="nav-tab" data-f="ai">🤖 AI & Tech</button>
-            <button class="nav-tab" data-f="finserv">🌐 Fin Services</button>
-        </nav>
         <div class="header-right">
-            <div class="search-wrap">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                </svg>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search articles…" autocomplete="off">
+            <span class="badge-count" id="countBadge">Loading…</span>
+            <div class="badge-time">
+                <div class="live-dot"></div>
+                <span id="refreshTime">Connecting</span>
             </div>
-            <span class="count-badge" id="countBadge">Loading…</span>
-            <button class="refresh-btn" id="refreshBtn">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
-                    <path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
-                </svg>
-                Refresh All
-            </button>
         </div>
     </div>
 </header>
 
-<!-- Hero Banner -->
-<div class="hero">
-    <div class="hero-inner">
-        <!-- Left -->
-        <div class="hero-brand-block">
-            <div class="hero-eyebrow">Intelligence · Insights · Strategy</div>
-            <div class="hero-logo-text">BFSI Intelligence<br>Summit 2026</div>
-            <div class="hero-tagline">Where banking leaders and consultants shape the future of financial services</div>
-            <a href="#" class="hero-cta-btn">
-                Explore Insights
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+<!-- Controls -->
+<div class="controls-bar">
+    <div class="controls-inner">
+        <div class="pill-group" id="pillGroup">
+            <button class="pill active" data-f="all">All</button>
+            <button class="pill" data-f="banking">🏦 Banking</button>
+            <button class="pill" data-f="payments">💳 Payments</button>
+            <button class="pill" data-f="ai">🤖 AI & Tech</button>
+            <button class="pill" data-f="finserv">🌐 Fin Services</button>
         </div>
-        <!-- Center -->
-        <div class="hero-center">
-            <div class="hero-headline">AI is Redefining the Future of Finance</div>
-            <div class="hero-subtext">With 78% of financial institutions accelerating AI adoption, discover the strategies, insights and frameworks shaping the next era of BFSI.</div>
-            <div class="hero-subline">Intelligence forum for banking executives, consultants, and technology innovators</div>
+        <div class="controls-divider"></div>
+        <div class="search-wrap">
+            <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search articles…" autocomplete="off">
         </div>
-        <!-- Right -->
-        <div class="hero-right-block">
-            <div class="hero-stat-num" id="heroStatNum">—</div>
-            <div class="hero-stat-label">Articles curated from top consulting & media sources</div>
-            <a href="#" class="hero-cta-btn-outline">
-                View Report →
-            </a>
-        </div>
+        <button class="refresh-btn" id="refreshBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+                <path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+            </svg>
+            Refresh All
+        </button>
     </div>
 </div>
 
-<!-- Main Content -->
+<!-- Main -->
 <div class="main-wrap">
-
-    <!-- LEFT: Latest News Feed -->
+    <!-- Content area -->
     <main>
         <div class="fallback-banner" id="fallbackBanner">
-            <strong>⚡ Demo Mode</strong> — Live feeds are blocked by browser CORS restrictions. Showing curated sample articles to demonstrate the layout. Deploy to a server or use a CORS browser extension to enable real-time feeds.
+            <strong>⚡ Demo Mode</strong> — Live feeds are blocked by browser CORS policy in this environment.
+            Displaying curated sample articles so the layout and filtering are fully demonstrable.
+            Deploy to a web server or use a CORS browser extension to enable real-time feeds.
         </div>
-        <div class="panel-card">
-            <div class="section-head">
-                <div class="section-title">Latest Intelligence</div>
-                <span class="section-cnt" id="newsCount">—</span>
-                <a href="#" class="section-link" id="viewAllLink">All articles →</a>
-            </div>
-            <div id="newsFeed"></div>
-        </div>
+        <div class="featured-strip" id="featuredStrip"></div>
+        <div class="article-grid" id="articleGrid"></div>
     </main>
 
-    <!-- CENTER: Deep Analysis (consulting firms) -->
-    <div>
-        <div class="panel-card">
-            <div class="section-head">
-                <div class="section-title">Deep Analysis</div>
-                <span class="section-cnt" id="analysisCount">—</span>
-            </div>
-            <div id="analysisFeed"></div>
-        </div>
-    </div>
-
-    <!-- RIGHT: Sidebar -->
+    <!-- Sidebar -->
     <aside class="sidebar">
-        <!-- Stat Widget -->
-        <div class="stat-widget">
-            <div class="stat-widget-brand">BFSI Intelligence</div>
-            <div class="stat-big" id="statBig">10</div>
-            <div class="stat-desc">premium sources actively monitored across consulting and trade media</div>
-            <a href="#" class="stat-cta">
-                View intelligence →
-            </a>
-        </div>
-
         <!-- Source Health -->
-        <div class="side-panel">
-            <div class="side-panel-head">
+        <div class="panel">
+            <div class="panel-head">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
                 </svg>
@@ -946,16 +790,31 @@
             </div>
             <div id="sourceList"></div>
         </div>
-
         <!-- Topic Breakdown -->
-        <div class="side-panel">
-            <div class="side-panel-head">
+        <div class="panel">
+            <div class="panel-head">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
-                Topics
+                Topic Breakdown
             </div>
             <div id="topicBreakdown"></div>
+        </div>
+        <!-- About -->
+        <div class="panel">
+            <div class="panel-head">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+                </svg>
+                About
+            </div>
+            <div style="padding: 14px; font-size: 11.5px; color: var(--txt-2); line-height: 1.7;">
+                A personal intelligence feed replacing manual browsing of consulting firms and trade media.
+                Articles are filtered by BFSI relevance and sorted newest-first.
+                <div style="margin-top:10px; font-size:10.5px; color:var(--txt-3);">
+                    Sources: McKinsey · BCG · Deloitte · PwC · Oliver Wyman · Banking Dive · Payments Dive · PYMNTS · Finextra · The Financial Brand
+                </div>
+            </div>
         </div>
     </aside>
 </div>
@@ -963,18 +822,17 @@
 <!-- Footer -->
 <footer class="site-footer">
     <div class="footer-inner">
-        <div class="footer-left">
-            BFSI Intelligence Hub · <span id="footerRefresh">Not yet refreshed</span> · Not affiliated with any cited organization
-        </div>
         <div class="footer-sources">
+            Sources:
             McKinsey<span>·</span>BCG<span>·</span>Deloitte<span>·</span>PwC<span>·</span>Oliver Wyman<span>·</span>Banking Dive<span>·</span>Payments Dive<span>·</span>PYMNTS<span>·</span>Finextra<span>·</span>The Financial Brand
         </div>
+        <div class="footer-copy">BFSI Intelligence Hub · Not affiliated with any cited organization</div>
     </div>
 </footer>
 
 <!-- Scroll Top -->
 <button id="scrollTop" title="Back to top" aria-label="Scroll to top">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <path d="M18 15l-6-6-6 6"/>
     </svg>
 </button>
@@ -986,52 +844,111 @@
 const CONFIG = {
     proxy: 'https://api.allorigins.win/get?url=',
     sources: [
-        { id:'mckinsey',       name:'McKinsey',            abbr:'McK', color:'#0050A0', url:'https://www.mckinsey.com/rss/insights.xml' },
-        { id:'bcg',            name:'BCG',                 abbr:'BCG', color:'#1A7F37', url:'https://www.bcg.com/rss/insights.xml' },
-        { id:'deloitte',       name:'Deloitte',            abbr:'Del', color:'#5a8500', url:'https://www2.deloitte.com/us/en/insights.rss' },
-        { id:'pwc',            name:'PwC',                 abbr:'PwC', color:'#D04A02', url:'https://www.pwc.com/gx/en/rss.xml' },
-        { id:'oliverwyman',    name:'Oliver Wyman',        abbr:'OW',  color:'#005F96', url:'https://www.oliverwyman.com/rss.xml' },
-        { id:'bankingdive',    name:'Banking Dive',        abbr:'BD',  color:'#2D6DA8', url:'https://www.bankingdive.com/feeds/news.rss' },
-        { id:'paymentsdive',   name:'Payments Dive',       abbr:'PD',  color:'#7B2D8B', url:'https://www.paymentsdive.com/feeds/news.rss' },
-        { id:'pymnts',         name:'PYMNTS',              abbr:'PY',  color:'#C0281E', url:'https://www.pymnts.com/feed/' },
-        { id:'finextra',       name:'Finextra',            abbr:'FX',  color:'#004B87', url:'https://www.finextra.com/rss/headlines.rss' },
-        { id:'financialbrand', name:'The Financial Brand', abbr:'FB',  color:'#7a5a20', url:'https://thefinancialbrand.com/feed/' },
+        { id:'mckinsey',       name:'McKinsey',            url:'https://www.mckinsey.com/rss/insights.xml',             cls:'t-mckinsey' },
+        { id:'bcg',            name:'BCG',                 url:'https://www.bcg.com/rss/insights.xml',                  cls:'t-bcg' },
+        { id:'deloitte',       name:'Deloitte',            url:'https://www2.deloitte.com/us/en/insights.rss',          cls:'t-deloitte' },
+        { id:'pwc',            name:'PwC',                 url:'https://www.pwc.com/gx/en/rss.xml',                     cls:'t-pwc' },
+        { id:'oliverwyman',    name:'Oliver Wyman',        url:'https://www.oliverwyman.com/rss.xml',                   cls:'t-oliverwyman' },
+        { id:'bankingdive',    name:'Banking Dive',        url:'https://www.bankingdive.com/feeds/news.rss',            cls:'t-bankingdive' },
+        { id:'paymentsdive',   name:'Payments Dive',       url:'https://www.paymentsdive.com/feeds/news.rss',           cls:'t-paymentsdive' },
+        { id:'pymnts',         name:'PYMNTS',              url:'https://www.pymnts.com/feed/',                          cls:'t-pymnts' },
+        { id:'finextra',       name:'Finextra',            url:'https://www.finextra.com/rss/headlines.rss',            cls:'t-finextra' },
+        { id:'financialbrand', name:'The Financial Brand', url:'https://thefinancialbrand.com/feed/',                   cls:'t-financialbrand' },
     ],
     topics: {
-        banking: { label:'🏦 Commercial Banking', kw:['commercial banking','corporate banking','trade finance','lending','credit','treasury','loan','deposit','wealth management','retail banking'] },
-        payments: { label:'💳 Payments',           kw:['payments','real-time payments','iso 20022','swift','cross-border','digital payments','cbdc','payment','remittance','settlement','clearing','acquiring'] },
-        ai:      { label:'🤖 AI & Technology',     kw:['artificial intelligence',' ai ','ai-','machine learning','generative ai','automation','fintech','regtech','blockchain','digital transformation','algorithm'] },
-        finserv: { label:'🌐 Financial Services',  kw:['financial services','bfsi','banking transformation','digital banking','open banking','embedded finance','insurance','capital markets','asset management'] },
-    },
-    consulting: ['mckinsey','bcg','deloitte','pwc','oliverwyman'],
-    thumbGradients: {
-        mckinsey:       'linear-gradient(135deg,#003d82,#0066cc)',
-        bcg:            'linear-gradient(135deg,#0a5c1e,#1a8f3a)',
-        deloitte:       'linear-gradient(135deg,#3d5c00,#6aa000)',
-        pwc:            'linear-gradient(135deg,#8c2800,#d04a02)',
-        oliverwyman:    'linear-gradient(135deg,#003d66,#005f96)',
-        bankingdive:    'linear-gradient(135deg,#1a4d7c,#2d6da8)',
-        paymentsdive:   'linear-gradient(135deg,#4d1a66,#7b2d8b)',
-        pymnts:         'linear-gradient(135deg,#7a1108,#c0281e)',
-        finextra:       'linear-gradient(135deg,#002d52,#004b87)',
-        financialbrand: 'linear-gradient(135deg,#4a3510,#8a6020)',
+        banking: {
+            label: '🏦 Commercial Banking',
+            kw: ['commercial banking','corporate banking','trade finance','lending','credit','treasury','loan','deposit','wealth management','retail banking']
+        },
+        payments: {
+            label: '💳 Payments',
+            kw: ['payments','real-time payments','iso 20022','swift','cross-border','digital payments','cbdc','payment','remittance','settlement','clearing','acquiring']
+        },
+        ai: {
+            label: '🤖 AI & Technology',
+            kw: ['artificial intelligence',' ai ','ai-','machine learning','generative ai','automation','fintech','regtech','blockchain','digital transformation','algorithm','model']
+        },
+        finserv: {
+            label: '🌐 Financial Services',
+            kw: ['financial services','bfsi','banking transformation','digital banking','open banking','embedded finance','insurance','capital markets','asset management','wealth']
+        },
     }
 };
 
 /* ================================================================
-   FALLBACK DATA
+   FALLBACK DATA (used when all CORS fetches fail)
 ================================================================ */
 const FALLBACK = [
-    { id:'fb01', sourceId:'mckinsey',    title:'The Future of Commercial Banking in a Digital-First World',                         desc:'Traditional commercial banks face mounting pressure as fintech challengers encroach on core revenue streams. This report outlines strategic imperatives for banks seeking to reclaim competitive ground through digital transformation.',       link:'https://www.mckinsey.com/industries/financial-services/our-insights', pub:new Date(Date.now()-1.8*864e5).toISOString() },
-    { id:'fb02', sourceId:'bcg',         title:'Generative AI in Financial Services: Scaling From Pilot to Production',              desc:'After years of proof-of-concept pilots, generative AI is entering the production phase at leading financial institutions. BCG analysis reveals the organizational conditions that determine whether AI investments deliver measurable returns.', link:'https://www.bcg.com/industries/financial-institutions', pub:new Date(Date.now()-2.5*864e5).toISOString() },
-    { id:'fb03', sourceId:'deloitte',    title:'ISO 20022 Migration: The Real-Time Payments Revolution Accelerates',                 desc:"The global migration to ISO 20022 messaging standards is entering its most critical phase. Deloitte examines how banks can turn compliance requirements into competitive differentiation and new service offerings.",                     link:'https://www2.deloitte.com/us/en/insights/industry/financial-services', pub:new Date(Date.now()-3.2*864e5).toISOString() },
-    { id:'fb04', sourceId:'pwc',         title:"Open Banking's Next Chapter: Embedded Finance and API-First Strategy",               desc:"Open banking has evolved from regulatory obligation into a strategic growth lever. PwC's global survey of 500 banking executives reveals how API-first architectures are enabling new revenue models and customer acquisition channels.",  link:'https://www.pwc.com/gx/en/financial-services', pub:new Date(Date.now()-4.1*864e5).toISOString() },
-    { id:'fb05', sourceId:'oliverwyman', title:'Credit Risk Transformation: AI-Driven Underwriting in Corporate Banking',            desc:"Machine learning models are redefining how corporate banks assess creditworthiness. Oliver Wyman's analysis reveals a 25% improvement in default prediction accuracy at early-adopting institutions.",                                      link:'https://www.oliverwyman.com/our-expertise/industries/financial-services', pub:new Date(Date.now()-5.0*864e5).toISOString() },
-    { id:'fb06', sourceId:'bankingdive', title:'Community Banks Navigate Deposit Competition and Rate Pressure',                     desc:'Rising interest rates and aggressive deposit-gathering by digital-first competitors are squeezing net interest margins at regional banks. Banking Dive examines the strategies executives deploy to retain deposits through the cycle.',      link:'https://www.bankingdive.com', pub:new Date(Date.now()-6.0*864e5).toISOString() },
-    { id:'fb07', sourceId:'paymentsdive',title:'Cross-Border Payments: SWIFT GPI vs. Emerging Blockchain Corridors',                desc:"The cross-border payments landscape is fragmenting as blockchain-based settlement networks challenge SWIFT's dominance. Payments Dive maps the corridors most likely to see disruption over the next 18 months.",                           link:'https://www.paymentsdive.com', pub:new Date(Date.now()-7.0*864e5).toISOString() },
-    { id:'fb08', sourceId:'pymnts',      title:'CBDC Momentum: 130 Countries Now in Active Exploration or Pilot Phase',             desc:"Central bank digital currencies have moved from theoretical exercise to operational reality. PYMNTS' global CBDC tracker identifies the design choices that will shape interoperability across retail and wholesale corridors.",         link:'https://www.pymnts.com/central-bank-digital-currency', pub:new Date(Date.now()-8.0*864e5).toISOString() },
-    { id:'fb09', sourceId:'finextra',    title:'Machine Learning in Trade Finance: Automating Documentary Credit Processing',        desc:"Trade finance remains one of banking's most paper-intensive processes, but AI is changing that. Finextra reports on how leading transaction banks deploy NLP and computer vision to cut letter-of-credit processing from days to hours.", link:'https://www.finextra.com/channel/trade-finance', pub:new Date(Date.now()-9.0*864e5).toISOString() },
-    { id:'fb10', sourceId:'financialbrand',title:'Digital Banking Experience: Why CX Is the New Battleground for Deposits',         desc:"Customer experience has overtaken rate as the primary driver of primary bank relationships among under-40 consumers. The Financial Brand's annual survey reveals UX investments delivering the highest retention and share-of-wallet gains.",  link:'https://thefinancialbrand.com/category/digital-banking', pub:new Date(Date.now()-10.0*864e5).toISOString() },
+    {
+        id:'fb01', sourceId:'mckinsey', sourceName:'McKinsey', cls:'t-mckinsey',
+        title:'The Future of Commercial Banking in a Digital-First World',
+        desc:'Traditional commercial banks face mounting pressure as fintech challengers and big tech firms encroach on core revenue streams. This report outlines strategic imperatives for banks seeking to reclaim competitive ground through digital transformation and ecosystem partnerships.',
+        link:'https://www.mckinsey.com/industries/financial-services/our-insights',
+        pub: new Date(Date.now()-2*86400000).toISOString(),
+    },
+    {
+        id:'fb02', sourceId:'bcg', sourceName:'BCG', cls:'t-bcg',
+        title:'Generative AI in Financial Services: Scaling From Pilot to Production',
+        desc:'After years of proof-of-concept pilots, generative AI is entering the production phase at leading financial institutions. BCG analysis reveals the organizational, data, and risk management conditions that determine whether AI investments deliver measurable returns.',
+        link:'https://www.bcg.com/industries/financial-institutions',
+        pub: new Date(Date.now()-3*86400000).toISOString(),
+    },
+    {
+        id:'fb03', sourceId:'deloitte', sourceName:'Deloitte', cls:'t-deloitte',
+        title:'ISO 20022 Migration: The Real-Time Payments Revolution Accelerates',
+        desc:"The global migration to ISO 20022 messaging standards is entering its most critical phase, with SWIFT's cross-border payment network completing its transition window. Deloitte examines how banks can turn compliance requirements into competitive differentiation.",
+        link:'https://www2.deloitte.com/us/en/insights/industry/financial-services',
+        pub: new Date(Date.now()-4*86400000).toISOString(),
+    },
+    {
+        id:'fb04', sourceId:'pwc', sourceName:'PwC', cls:'t-pwc',
+        title:"Open Banking's Next Chapter: Embedded Finance and API-First Strategy",
+        desc:"Open banking has evolved from a regulatory obligation into a strategic growth lever for forward-thinking financial institutions. PwC's global survey of 500 banking executives reveals how API-first architectures are enabling new revenue models and customer acquisition channels.",
+        link:'https://www.pwc.com/gx/en/financial-services',
+        pub: new Date(Date.now()-5*86400000).toISOString(),
+    },
+    {
+        id:'fb05', sourceId:'oliverwyman', sourceName:'Oliver Wyman', cls:'t-oliverwyman',
+        title:'Credit Risk Transformation: AI-Driven Underwriting in Corporate Banking',
+        desc:"Machine learning models are redefining how corporate banks assess creditworthiness, moving beyond traditional financial ratios to incorporate alternative data signals. Oliver Wyman's analysis reveals a 25% improvement in default prediction accuracy at early-adopting institutions.",
+        link:'https://www.oliverwyman.com/our-expertise/industries/financial-services',
+        pub: new Date(Date.now()-6*86400000).toISOString(),
+    },
+    {
+        id:'fb06', sourceId:'bankingdive', sourceName:'Banking Dive', cls:'t-bankingdive',
+        title:'Community Banks Navigate Deposit Competition and Rate Pressure',
+        desc:'Rising interest rates and aggressive deposit-gathering by digital-first competitors are squeezing net interest margins at regional and community banks. Banking Dive examines the strategies executives are deploying to retain deposits and maintain profitability through the cycle.',
+        link:'https://www.bankingdive.com',
+        pub: new Date(Date.now()-7*86400000).toISOString(),
+    },
+    {
+        id:'fb07', sourceId:'paymentsdive', sourceName:'Payments Dive', cls:'t-paymentsdive',
+        title:'Cross-Border Payments: SWIFT GPI vs. Emerging Blockchain Corridors',
+        desc:"The cross-border payments landscape is fragmenting as blockchain-based settlement networks challenge SWIFT's dominance in correspondent banking. Payments Dive maps the competitive landscape and identifies the corridors most likely to see disruption over the next 18 months.",
+        link:'https://www.paymentsdive.com',
+        pub: new Date(Date.now()-8*86400000).toISOString(),
+    },
+    {
+        id:'fb08', sourceId:'pymnts', sourceName:'PYMNTS', cls:'t-pymnts',
+        title:'CBDC Momentum: 130 Countries Now in Active Exploration or Pilot Phase',
+        desc:"Central bank digital currencies have moved from theoretical exercise to operational reality in a growing number of jurisdictions. PYMNTS' global CBDC tracker identifies the design choices — retail vs. wholesale, account-based vs. token-based — that will shape interoperability.",
+        link:'https://www.pymnts.com/central-bank-digital-currency',
+        pub: new Date(Date.now()-9*86400000).toISOString(),
+    },
+    {
+        id:'fb09', sourceId:'finextra', sourceName:'Finextra', cls:'t-finextra',
+        title:'Machine Learning in Trade Finance: Automating Documentary Credit Processing',
+        desc:'Trade finance remains one of banking\'s most paper-intensive processes, but AI is beginning to change that. Finextra reports on how leading transaction banks are deploying NLP and computer vision to cut letter-of-credit processing times from days to hours.',
+        link:'https://www.finextra.com/channel/trade-finance',
+        pub: new Date(Date.now()-10*86400000).toISOString(),
+    },
+    {
+        id:'fb10', sourceId:'financialbrand', sourceName:'The Financial Brand', cls:'t-financialbrand',
+        title:'Digital Banking Experience: Why CX Is the New Battleground for Deposits',
+        desc:"Customer experience has overtaken rate as the primary driver of primary bank relationships among under-40 consumers. The Financial Brand's annual digital banking survey reveals the UX investments delivering the highest retention and share-of-wallet gains.",
+        link:'https://thefinancialbrand.com/category/digital-banking',
+        pub: new Date(Date.now()-11*86400000).toISOString(),
+    },
 ];
 
 /* ================================================================
@@ -1050,88 +967,88 @@ const state = {
    UTILS
 ================================================================ */
 function rDate(iso) {
-    const d = new Date(iso), now = Date.now();
+    if (!iso) return 'Recently';
+    const d = new Date(iso), now = Date.now(), diff = Math.floor((now - d) / 1000);
     if (isNaN(d)) return 'Recently';
-    const s = Math.floor((now - d) / 1000);
-    if (s < 60)     return 'Just now';
-    if (s < 3600)   return `${Math.floor(s/60)} min${Math.floor(s/60)>1?'s':''} ago`;
-    if (s < 86400)  return `${Math.floor(s/3600)}h ago`;
-    if (s < 604800) return `${Math.floor(s/86400)}d ago`;
+    if (diff < 60)     return 'Just now';
+    if (diff < 3600)   return `${Math.floor(diff/60)}m ago`;
+    if (diff < 86400)  return `${Math.floor(diff/3600)}h ago`;
+    if (diff < 604800) return `${Math.floor(diff/86400)}d ago`;
     return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
 }
 
-function clean(h) {
-    if (!h) return '';
-    return h.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();
+function clean(html) {
+    if (!html) return '';
+    return html
+        .replace(/<[^>]+>/g, '')
+        .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim();
 }
 
 function topicsOf(title, desc) {
     const txt = (title + ' ' + desc).toLowerCase();
-    return Object.entries(CONFIG.topics).filter(([,t]) => t.kw.some(k => txt.includes(k))).map(([k]) => k);
-}
-
-function firstCat(topics) {
-    if (!topics || !topics.length) return '/insights';
-    const map = { banking:'/banking', payments:'/payments', ai:'/ai-tech', finserv:'/finserv' };
-    return map[topics[0]] || '/insights';
+    return Object.entries(CONFIG.topics)
+        .filter(([,t]) => t.kw.some(k => txt.includes(k)))
+        .map(([k]) => k);
 }
 
 function isDup(a, b) {
-    const n = s => s.toLowerCase().replace(/[^a-z0-9]/g,'').trim();
-    const na = n(a), nb = n(b);
+    const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g,'').trim();
+    const na = norm(a), nb = norm(b);
     if (na === nb) return true;
-    const [sh, lo] = na.length <= nb.length ? [na, nb] : [nb, na];
-    return sh.length > 24 && lo.startsWith(sh.slice(0, Math.floor(sh.length * .75)));
+    const [short, long] = na.length <= nb.length ? [na,nb] : [nb,na];
+    return short.length > 24 && long.startsWith(short.slice(0, Math.floor(short.length*0.75)));
 }
 
 function dedupe(arr) {
     const seen = [];
-    return arr.filter(a => { if (seen.some(s => isDup(s.title, a.title))) return false; seen.push(a); return true; });
+    return arr.filter(a => {
+        if (seen.some(s => isDup(s.title, a.title))) return false;
+        seen.push(a);
+        return true;
+    });
 }
 
 function esc(s) {
     return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function srcById(id) { return CONFIG.sources.find(s => s.id === id); }
-
 /* ================================================================
    RSS PARSING
 ================================================================ */
-function extractThumb(item) {
-    const mc = item.querySelector('media\\:content[url], media\\:thumbnail[url]');
-    if (mc) return mc.getAttribute('url');
-    const enc = item.querySelector('enclosure[type^="image"]');
-    if (enc) return enc.getAttribute('url');
-    const raw = item.querySelector('description')?.textContent || '';
-    const m = raw.match(/<img[^>]+src=["']([^"'>"]+)["']/i);
-    return m ? m[1] : null;
-}
-
 function parseRSS(xml, src) {
     const doc = new DOMParser().parseFromString(xml, 'text/xml');
     const items = doc.querySelectorAll('item, entry');
-    const out = [];
+    const results = [];
     items.forEach((item, i) => {
         const title = clean(item.querySelector('title')?.textContent || '');
         if (!title || title.length < 8) return;
         const link  = (item.querySelector('link')?.textContent?.trim() || item.querySelector('link')?.getAttribute('href') || '').trim();
         const desc  = clean(item.querySelector('description, summary, content\\:encoded')?.textContent || '');
         const pub   = item.querySelector('pubDate, published, dc\\:date, updated')?.textContent || '';
-        const pd    = pub ? new Date(pub) : new Date();
-        const img   = extractThumb(item);
-        const art   = { id:`${src.id}_${i}`, title, desc:desc.slice(0,420), link, pub:isNaN(pd)?new Date().toISOString():pd.toISOString(), sourceId:src.id, img };
+        const parsedPub = pub ? new Date(pub) : new Date();
+        const art = {
+            id: `${src.id}_${i}`,
+            title,
+            desc: desc.slice(0, 420),
+            link,
+            pub: isNaN(parsedPub) ? new Date().toISOString() : parsedPub.toISOString(),
+            sourceName: src.name,
+            sourceId: src.id,
+            cls: src.cls,
+            topics: [],
+        };
         art.topics = topicsOf(art.title, art.desc);
-        out.push(art);
+        results.push(art);
     });
-    return out;
+    return results;
 }
 
 /* ================================================================
    FETCH
 ================================================================ */
 async function fetchOne(src) {
-    const res = await fetch(CONFIG.proxy + encodeURIComponent(src.url), { signal: AbortSignal.timeout(14000) });
+    const url = CONFIG.proxy + encodeURIComponent(src.url);
+    const res = await fetch(url, { signal: AbortSignal.timeout(14000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
     if (!json.contents) throw new Error('empty');
@@ -1141,10 +1058,11 @@ async function fetchOne(src) {
 async function fetchAll() {
     if (state.loading) return;
     state.loading = true;
+
     const btn = document.getElementById('refreshBtn');
     btn.disabled = true;
     btn.classList.add('spinning');
-    barStart();
+    startBar();
 
     CONFIG.sources.forEach(s => { state.srcStatus[s.id] = { status:'wait', cnt:0, name:s.name }; });
     renderSources();
@@ -1152,34 +1070,50 @@ async function fetchAll() {
 
     const tasks = CONFIG.sources.map(src =>
         fetchOne(src)
-            .then(arts => { state.srcStatus[src.id] = { status:'ok', cnt:arts.length, name:src.name }; renderSources(); return arts; })
-            .catch(e  => { console.warn(`[BFSI] ${src.name}:`, e.message); state.srcStatus[src.id] = { status:'fail', cnt:0, name:src.name }; renderSources(); return []; })
+            .then(arts => {
+                state.srcStatus[src.id] = { status:'ok', cnt:arts.length, name:src.name };
+                renderSources();
+                return arts;
+            })
+            .catch(err => {
+                console.warn(`[BFSI] ${src.name} failed:`, err.message);
+                state.srcStatus[src.id] = { status:'fail', cnt:0, name:src.name };
+                renderSources();
+                return [];
+            })
     );
 
     const settled = await Promise.allSettled(tasks);
-    const fresh   = settled.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+    const fresh = settled.flatMap(r => r.status === 'fulfilled' ? r.value : []);
 
     state.loading = false;
     btn.disabled = false;
     btn.classList.remove('spinning');
-    barDone();
+    doneBar();
 
-    const ok = Object.values(state.srcStatus).filter(s => s.status === 'ok').length;
-    if (ok === 0) {
+    const okCount = Object.values(state.srcStatus).filter(s => s.status === 'ok').length;
+
+    if (okCount === 0) {
         state.fallback = true;
-        state.articles = FALLBACK.map(a => ({ ...a, topics: topicsOf(a.title, a.desc) }));
+        const fb = FALLBACK.map(a => ({
+            ...a,
+            desc: a.desc,
+            topics: topicsOf(a.title, a.desc),
+        }));
+        state.articles = fb;
         CONFIG.sources.forEach(s => {
-            const cnt = state.articles.filter(a => a.sourceId === s.id).length;
-            state.srcStatus[s.id] = { status:'demo', cnt, name:s.name };
+            const match = fb.filter(a => a.sourceId === s.id);
+            state.srcStatus[s.id] = { status:'demo', cnt:match.length, name:s.name };
         });
         document.getElementById('fallbackBanner').classList.add('show');
         renderSources();
     } else {
-        state.articles = dedupe([...fresh]).sort((a,b) => new Date(b.pub) - new Date(a.pub));
+        const existing = state.articles.filter(a => a.id.startsWith('fb'));
+        const merged   = dedupe([...fresh, ...existing]);
+        state.articles = merged.sort((a,b) => new Date(b.pub) - new Date(a.pub));
     }
 
-    const now = new Date().toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-    document.getElementById('footerRefresh').textContent = `Refreshed at ${now}`;
+    document.getElementById('refreshTime').textContent = `Refreshed ${rDate(new Date().toISOString())}`;
     renderAll();
 }
 
@@ -1187,183 +1121,134 @@ async function fetchAll() {
    LOADING BAR
 ================================================================ */
 const bar = document.getElementById('loadingBar');
-function barStart() { bar.className=''; bar.style.width='0'; requestAnimationFrame(()=>{ bar.classList.add('fill'); }); }
-function barDone()  { bar.classList.remove('fill'); bar.classList.add('done'); setTimeout(()=>bar.classList.add('hidden'),300); }
+function startBar() { bar.className = ''; bar.style.width='0'; requestAnimationFrame(()=>{ bar.classList.add('filling'); }); }
+function doneBar()  { bar.classList.remove('filling'); bar.classList.add('done'); setTimeout(()=>bar.classList.add('hidden'),300); }
 
 /* ================================================================
-   FILTER HELPERS
+   RENDERING
 ================================================================ */
+function renderSkeletons() {
+    document.getElementById('featuredStrip').classList.remove('show');
+    document.getElementById('featuredStrip').innerHTML = '';
+    document.getElementById('articleGrid').innerHTML = Array.from({length:9}).map(()=>`
+        <div class="sk-card">
+            <div class="sk sk-tag"></div>
+            <div class="sk sk-t1"></div>
+            <div class="sk sk-t2"></div>
+            <div class="sk sk-d1"></div>
+            <div class="sk sk-d2"></div>
+            <div class="sk sk-d3"></div>
+            <div class="sk sk-foot"></div>
+        </div>`).join('');
+    document.getElementById('countBadge').textContent = 'Loading…';
+}
+
 function visible(a) {
     if (state.filter !== 'all' && !a.topics.includes(state.filter)) return false;
     if (state.query) {
         const q = state.query.toLowerCase();
-        if (!(a.title.toLowerCase().includes(q) || (a.desc||'').toLowerCase().includes(q) || (srcById(a.sourceId)?.name||'').toLowerCase().includes(q))) return false;
+        if (!a.title.toLowerCase().includes(q) && !a.desc.toLowerCase().includes(q) && !a.sourceName.toLowerCase().includes(q)) return false;
     }
     return true;
 }
 
-/* ================================================================
-   SKELETON
-================================================================ */
-function renderSkeletons() {
-    document.getElementById('newsFeed').innerHTML = Array.from({length:8}).map(()=>`
-        <div class="sk-list-item">
-            <div class="sk sk-thumb"></div>
-            <div class="sk-body">
-                <div class="sk sk-tag"></div>
-                <div class="sk sk-t1"></div>
-                <div class="sk sk-t2"></div>
-                <div class="sk sk-meta"></div>
-            </div>
-        </div>`).join('');
-    document.getElementById('analysisFeed').innerHTML = Array.from({length:5}).map(()=>`
-        <div class="sk-analysis-item">
-            <div class="sk sk-avatar"></div>
-            <div class="sk-abody">
-                <div class="sk sk-an"></div>
-                <div class="sk sk-ar"></div>
-                <div class="sk sk-at1"></div>
-                <div class="sk sk-at2"></div>
-                <div class="sk sk-am"></div>
-            </div>
-        </div>`).join('');
-    document.getElementById('newsCount').textContent = '—';
-    document.getElementById('analysisCount').textContent = '—';
-    document.getElementById('countBadge').textContent = 'Loading…';
-    document.getElementById('heroStatNum').textContent = '—';
-}
-
-/* ================================================================
-   RENDER
-================================================================ */
-function newsItemHTML(a) {
-    const src = srcById(a.sourceId);
-    const grad = CONFIG.thumbGradients[a.sourceId] || 'linear-gradient(135deg,#374151,#6b7280)';
-    const thumbStyle = a.img
-        ? `background-image:url(${esc(a.img)});background-color:#e5e7eb`
-        : `background:${grad}`;
+function cardHTML(a) {
+    const topicChips = a.topics.map(t =>
+        `<span class="topic-chip">${CONFIG.topics[t]?.label || t}</span>`
+    ).join('');
     return `
-    <div class="news-item">
-        <div class="news-thumb" style="${thumbStyle}">
-            ${!a.img ? `<span class="thumb-label">${esc(src?.abbr||'?')}</span>` : ''}
-        </div>
-        <div class="news-body">
-            <div class="cat-tag">${firstCat(a.topics)}</div>
-            <div class="news-title"><a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">${esc(a.title)}</a></div>
-            <div class="news-meta">
-                <span class="clock-icon">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                    </svg>
-                </span>
-                <span>${rDate(a.pub)}</span>
-                <span class="meta-source">${esc(src?.name||a.sourceId)}</span>
-            </div>
-        </div>
-    </div>`;
-}
-
-function analysisItemHTML(a) {
-    const src = srcById(a.sourceId);
-    const color = src?.color || '#374151';
-    const abbr  = src?.abbr  || '?';
-    return `
-    <div class="analysis-item">
-        <div class="analyst-avatar" style="background:${color}">${esc(abbr)}</div>
-        <div class="analyst-body">
-            <div class="analyst-header">
-                <span class="analyst-name">${esc(src?.name||a.sourceId)}</span>
-                <span class="analyst-check">✓</span>
-            </div>
-            <div class="analyst-role">Consulting Intelligence · ${firstCat(a.topics)}</div>
-            <div class="analysis-title"><a href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">${esc(a.title)}</a></div>
-            <div class="analysis-meta">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                </svg>
-                ${rDate(a.pub)}
-            </div>
+    <div class="article-card">
+        <span class="card-source-tag ${esc(a.cls)}">${esc(a.sourceName)}</span>
+        <a class="card-title" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">${esc(a.title)}</a>
+        <p class="card-desc">${esc(a.desc) || 'No description available.'}</p>
+        ${topicChips ? `<div class="card-topics">${topicChips}</div>` : ''}
+        <div class="card-footer">
+            <span class="card-date">${rDate(a.pub)}</span>
+            <a class="card-cta" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">Read →</a>
         </div>
     </div>`;
 }
 
 function renderAll() {
-    const filtered = state.articles.filter(visible);
-    const total    = filtered.length;
+    const list = state.articles.filter(visible);
+    document.getElementById('countBadge').textContent = `${list.length} Article${list.length !== 1 ? 's' : ''}`;
 
-    document.getElementById('countBadge').textContent = `${total} article${total !== 1 ? 's' : ''}`;
-    document.getElementById('newsCount').textContent   = total;
-    document.getElementById('heroStatNum').textContent = state.articles.length;
+    const grid = document.getElementById('articleGrid');
+    const strip = document.getElementById('featuredStrip');
 
-    // Left: news feed
-    const newsFeed = document.getElementById('newsFeed');
-    if (total === 0) {
-        newsFeed.innerHTML = `
+    if (list.length === 0) {
+        strip.classList.remove('show');
+        strip.innerHTML = '';
+        grid.innerHTML = `
             <div class="empty-state">
                 <h3>No articles found</h3>
-                <p>Try a different filter, clear your search, or click Refresh All.</p>
+                <p>Try a different filter or search term, or click Refresh All to fetch the latest.</p>
             </div>`;
-    } else {
-        newsFeed.innerHTML = filtered.slice(0, 30).map(newsItemHTML).join('');
+        return;
     }
 
-    // Center: analysis — consulting sources, filtered
-    const analysisArticles = state.articles
-        .filter(a => CONFIG.consulting.includes(a.sourceId) && visible(a))
-        .slice(0, 8);
-    const analysisFeed = document.getElementById('analysisFeed');
-    document.getElementById('analysisCount').textContent = analysisArticles.length;
-    if (analysisArticles.length === 0) {
-        analysisFeed.innerHTML = `<div class="empty-state"><p>No consulting insights loaded yet.</p></div>`;
-    } else {
-        analysisFeed.innerHTML = analysisArticles.map(analysisItemHTML).join('');
-    }
+    // Featured card = newest article
+    const [top, ...rest] = list;
+    const topTopics = top.topics.map(t => `<span class="card-source-tag ${esc(top.cls)}" style="margin-right:6px">${CONFIG.topics[t]?.label||t}</span>`).join('');
+    strip.innerHTML = `
+        <div class="featured-card">
+            <div>
+                <div class="featured-eyebrow">Featured · ${esc(top.sourceName)}</div>
+                <a class="featured-title" href="${esc(top.link)}" target="_blank" rel="noopener noreferrer">${esc(top.title)}</a>
+                <p class="featured-desc">${esc(top.desc)}</p>
+                <div class="featured-meta">
+                    <span class="featured-badge ${esc(top.cls)}">${esc(top.sourceName)}</span>
+                    ${topTopics}
+                    <span class="featured-date">${rDate(top.pub)}</span>
+                </div>
+            </div>
+            <a class="featured-read" href="${esc(top.link)}" target="_blank" rel="noopener noreferrer">Read Article →</a>
+        </div>`;
+    strip.classList.add('show');
 
-    renderTopics(total);
+    grid.innerHTML = rest.map(cardHTML).join('');
+    renderTopics();
 }
 
 function renderSources() {
     document.getElementById('sourceList').innerHTML = Object.entries(state.srcStatus).map(([,s]) => {
-        const dotClass = { ok:'dot-ok', fail:'dot-fail', demo:'dot-demo', wait:'dot-wait' }[s.status] || 'dot-wait';
+        const iconMap = { ok:'<span class="src-status ok">✓</span>', fail:'<span class="src-status fail">✗</span>', demo:'<span class="src-status demo">◇</span>', wait:'<span class="src-status wait">◌</span>' };
         return `<div class="src-row">
-            <span class="src-dot ${dotClass}"></span>
+            ${iconMap[s.status] || iconMap.wait}
             <span class="src-name">${esc(s.name)}</span>
             <span class="src-cnt">${s.cnt}</span>
         </div>`;
     }).join('');
 }
 
-function renderTopics(total) {
-    const max = Math.max(1, ...Object.keys(CONFIG.topics).map(k => state.articles.filter(a => a.topics.includes(k)).length));
+function renderTopics() {
     document.getElementById('topicBreakdown').innerHTML = Object.entries(CONFIG.topics).map(([key, t]) => {
         const cnt = state.articles.filter(a => a.topics.includes(key)).length;
-        const pct = Math.round((cnt / max) * 100);
         return `<div class="topic-row" onclick="setFilter('${key}')">
             <span class="topic-label">${t.label}</span>
-            <div class="topic-bar-wrap"><div class="topic-bar" style="width:${pct}%"></div></div>
             <span class="topic-cnt">${cnt}</span>
         </div>`;
     }).join('');
 }
 
 /* ================================================================
-   FILTER & SEARCH
+   FILTER + SEARCH
 ================================================================ */
 function setFilter(f) {
     state.filter = f;
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.f === f));
+    document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.f === f));
     renderAll();
 }
 
-document.getElementById('headerNav').addEventListener('click', e => {
-    const t = e.target.closest('.nav-tab');
-    if (t) setFilter(t.dataset.f);
+document.getElementById('pillGroup').addEventListener('click', e => {
+    const p = e.target.closest('.pill');
+    if (p) setFilter(p.dataset.f);
 });
 
-let st;
+let searchTimer;
 document.getElementById('searchInput').addEventListener('input', e => {
-    clearTimeout(st);
-    st = setTimeout(() => { state.query = e.target.value.trim(); renderAll(); }, 150);
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { state.query = e.target.value.trim(); renderAll(); }, 150);
 });
 
 document.getElementById('refreshBtn').addEventListener('click', () => {
@@ -1371,6 +1256,7 @@ document.getElementById('refreshBtn').addEventListener('click', () => {
         state.articles = [];
         state.fallback = false;
         document.getElementById('fallbackBanner').classList.remove('show');
+        document.getElementById('featuredStrip').classList.remove('show');
         fetchAll();
     }
 });
@@ -1378,9 +1264,9 @@ document.getElementById('refreshBtn').addEventListener('click', () => {
 /* ================================================================
    SCROLL TOP
 ================================================================ */
-const scrollBtn = document.getElementById('scrollTop');
-window.addEventListener('scroll', () => scrollBtn.classList.toggle('show', window.scrollY > 500));
-scrollBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => scrollTopBtn.classList.toggle('show', window.scrollY > 500));
+scrollTopBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
 /* ================================================================
    INIT
