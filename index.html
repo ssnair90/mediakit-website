@@ -1091,13 +1091,10 @@ async function fetchAll() {
     btn.classList.remove('spinning');
     doneBar();
 
-    const okCount = Object.values(state.srcStatus).filter(s => s.status === 'ok').length;
-
-    if (okCount === 0) {
+    if (fresh.length === 0) {
         state.fallback = true;
         const fb = FALLBACK.map(a => ({
             ...a,
-            desc: a.desc,
             topics: topicsOf(a.title, a.desc),
         }));
         state.articles = fb;
@@ -1108,9 +1105,7 @@ async function fetchAll() {
         document.getElementById('fallbackBanner').classList.add('show');
         renderSources();
     } else {
-        const existing = state.articles.filter(a => a.id.startsWith('fb'));
-        const merged   = dedupe([...fresh, ...existing]);
-        state.articles = merged.sort((a,b) => new Date(b.pub) - new Date(a.pub));
+        state.articles = dedupe(fresh).sort((a,b) => new Date(b.pub) - new Date(a.pub));
     }
 
     document.getElementById('refreshTime').textContent = `Refreshed ${rDate(new Date().toISOString())}`;
